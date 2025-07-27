@@ -1502,7 +1502,7 @@
             }
         };
         
-        // Scanning Manager - Enhanced Workflow
+        // Scanning Manager - Optimized Workflow
         const scannerManager = {
             isScanning: false,
             currentRecordIndex: null,
@@ -1597,8 +1597,8 @@
                     const stream = await navigator.mediaDevices.getUserMedia({
                         video: {
                             facingMode: "environment", // Prefer rear camera
-                            width: { min: 1280, ideal: 1920 },
-                            height: { min: 720, ideal: 1080 }
+                            width: { min: 640, ideal: 1280 },
+                            height: { min: 480, ideal: 720 }
                         },
                         audio: false
                     });
@@ -1658,8 +1658,8 @@
                             target: document.querySelector('#camera-preview'),
                             constraints: {
                                 facingMode: "environment",
-                                width: 1280,
-                                height: 720
+                                width: 640,
+                                height: 480
                             }
                         },
                         decoder: {
@@ -1667,11 +1667,7 @@
                                 "code_128_reader",
                                 "ean_reader",
                                 "ean_8_reader",
-                                "code_39_reader",
-                                "code_39_vin_reader",
-                                "codabar_reader",
-                                "upc_reader",
-                                "upc_e_reader"
+                                "code_39_reader"
                             ],
                             debug: {
                                 drawBoundingBox: false,
@@ -1682,17 +1678,11 @@
                             multiple: false
                         },
                         locate: true,
-                        numOfWorkers: navigator.hardwareConcurrency || 4,
-                        frequency: 5, // Slower scanning for better accuracy
+                        numOfWorkers: 2,
+                        frequency: 10,
                         locator: {
                             halfSample: true,
-                            patchSize: "large",
-                            debug: {
-                                showCanvas: false,
-                                showPatches: false,
-                                showFoundPatches: false,
-                                showSkeleton: false
-                            }
+                            patchSize: "medium",
                         }
                     }, (err) => {
                         if (err) {
@@ -1725,7 +1715,7 @@
                     }
                     
                     this.isScanning = false;
-                    this.continuousScanning = false; // Stop continuous scanning
+                    this.continuousScanning = false;
                     
                     // Update UI
                     document.getElementById('stop-camera').disabled = true;
@@ -1757,16 +1747,14 @@
                 this.lastScannedCode = code;
                 this.lastScanTime = now;
                 
-                // Clear any previous timeout
-                if (this.scanTimeout) {
-                    clearTimeout(this.scanTimeout);
-                }
+                // Stop scanning
+                this.stopCamera();
                 
                 // Give visual feedback
                 this.showScanFeedback(true);
                 
                 // Process the barcode after a short delay
-                this.scanTimeout = setTimeout(() => {
+                setTimeout(() => {
                     this.processBarcode(code);
                 }, 500);
             },
@@ -1815,6 +1803,11 @@
                     this.showExpiryForm(product);
                 } else {
                     storage.showNotification("Product not found. Import product data first.", 'error');
+                    
+                    // Restart scanning if continuous scanning was enabled
+                    if (this.continuousScanning) {
+                        this.startCamera();
+                    }
                 }
             },
             
