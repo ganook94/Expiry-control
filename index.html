@@ -8,7 +8,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
     <style>
-        /* CSS variables with fallbacks */
         :root {
             --primary-blue: #00387b;
             --alert-red: #bb1e10;
@@ -28,7 +27,6 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            color: #2c3e50; /* Fallback */
             color: var(--text-dark);
             background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
             min-height: 100vh;
@@ -36,7 +34,6 @@
         }
 
         header {
-            background: #00387b; /* Fallback */
             background: var(--primary-blue);
             color: white;
             padding: 1rem;
@@ -102,12 +99,10 @@
             align-items: center;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #f67828; /* Fallback */
             border-bottom: 2px solid var(--action-orange);
         }
 
         .card-title {
-            color: #00387b; /* Fallback */
             color: var(--primary-blue);
             font-size: 1.3rem;
             font-weight: 600;
@@ -115,7 +110,6 @@
         }
 
         .card-icon {
-            background: #00387b; /* Fallback */
             background: var(--primary-blue);
             color: white;
             width: 42px;
@@ -156,17 +150,14 @@
         }
 
         .pending .status-count {
-            color: #f67828; /* Fallback */
             color: var(--action-orange);
         }
 
         .completed .status-count {
-            color: #237f52; /* Fallback */
             color: var(--confirm-green);
         }
 
         .expiring .status-count {
-            color: #bb1e10; /* Fallback */
             color: var(--alert-red);
         }
 
@@ -178,7 +169,6 @@
 
         .file-input-label {
             display: inline-block;
-            background: #237f52; /* Fallback */
             background: var(--confirm-green);
             color: white;
             padding: 15px 30px;
@@ -214,7 +204,6 @@
             position: relative;
             overflow: hidden;
             border-radius: 12px;
-            border: 3px solid #00387b; /* Fallback */
             border: 3px solid var(--primary-blue);
         }
 
@@ -238,7 +227,6 @@
         .scanner-frame {
             width: 70%;
             height: 150px;
-            border: 3px solid #f67828; /* Fallback */
             border: 3px solid var(--action-orange);
             border-radius: 8px;
             box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
@@ -251,7 +239,6 @@
             left: 0;
             width: 100%;
             height: 3px;
-            background: #bb1e10; /* Fallback */
             background: var(--alert-red);
             animation: scan 2s infinite linear;
             box-shadow: 0 0 10px rgba(187, 30, 16, 0.8);
@@ -291,7 +278,6 @@
         }
 
         .btn-scan {
-            background: #f67828; /* Fallback */
             background: var(--action-orange);
             color: white;
         }
@@ -303,7 +289,6 @@
         }
 
         .btn-export {
-            background: #237f52; /* Fallback */
             background: var(--confirm-green);
             color: white;
         }
@@ -315,7 +300,6 @@
         }
 
         .btn-secondary {
-            background: #00387b; /* Fallback */
             background: var(--primary-blue);
             color: white;
         }
@@ -327,7 +311,6 @@
         }
 
         .btn-danger {
-            background: #bb1e10; /* Fallback */
             background: var(--alert-red);
             color: white;
         }
@@ -355,7 +338,6 @@
         }
 
         .manual-input input:focus {
-            border-color: #f67828; /* Fallback */
             border-color: var(--action-orange);
             outline: none;
             box-shadow: 0 0 0 3px rgba(246, 120, 40, 0.2);
@@ -366,7 +348,6 @@
             padding: 25px;
             background: #f8f9fa;
             border-radius: 12px;
-            border-left: 5px solid #f67828; /* Fallback */
             border-left: 5px solid var(--action-orange);
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
         }
@@ -379,7 +360,6 @@
             display: block;
             margin-bottom: 10px;
             font-weight: 600;
-            color: #00387b; /* Fallback */
             color: var(--primary-blue);
             font-size: 1.05rem;
         }
@@ -394,7 +374,6 @@
         }
 
         .form-group input:focus {
-            border-color: #f67828; /* Fallback */
             border-color: var(--action-orange);
             box-shadow: 0 0 0 3px rgba(246, 120, 40, 0.2);
             outline: none;
@@ -423,13 +402,11 @@
         .detail-label {
             font-weight: 600;
             min-width: 100px;
-            color: #00387b; /* Fallback */
             color: var(--primary-blue);
         }
 
         .detail-value {
             flex: 1;
-            color: #2c3e50; /* Fallback */
             color: var(--text-dark);
         }
 
@@ -450,7 +427,6 @@
         }
 
         .tab.active {
-            background: #00387b; /* Fallback */
             background: var(--primary-blue);
             color: white;
         }
@@ -470,7 +446,6 @@
         }
 
         .product-table th {
-            background: #00387b; /* Fallback */
             background: var(--primary-blue);
             color: white;
             padding: 14px;
@@ -501,19 +476,16 @@
 
         .expiry-normal {
             background: #e3f9ee;
-            color: #237f52; /* Fallback */
             color: var(--confirm-green);
         }
 
         .expiring-soon {
             background: #fef0e5;
-            color: #f67828; /* Fallback */
             color: var(--action-orange);
         }
 
         .expired {
             background: #fdecea;
-            color: #bb1e10; /* Fallback */
             color: var(--alert-red);
         }
 
@@ -532,7 +504,6 @@
 
         .edit-btn {
             background: #e3f0ff;
-            color: #00387b; /* Fallback */
             color: var(--primary-blue);
             border: 1px solid #b8d4ff;
         }
@@ -543,7 +514,6 @@
 
         .delete-btn {
             background: #fdecea;
-            color: #bb1e10; /* Fallback */
             color: var(--alert-red);
             border: 1px solid #f9c9c5;
         }
@@ -565,7 +535,6 @@
         }
 
         .footer {
-            background: #00387b; /* Fallback */
             background: var(--primary-blue);
             color: white;
             text-align: center;
@@ -596,13 +565,11 @@
         }
 
         .notification.success {
-            background: #237f52; /* Fallback */
             background: var(--confirm-green);
             border-left: 5px solid #1a6b46;
         }
 
         .notification.error {
-            background: #bb1e10; /* Fallback */
             background: var(--alert-red);
             border-left: 5px solid #a61a0e;
         }
@@ -612,12 +579,10 @@
             border-radius: 10px;
             padding: 20px;
             margin: 20px 0;
-            border: 2px dashed #00387b; /* Fallback */
             border: 2px dashed var(--primary-blue);
         }
 
         .import-guide h3 {
-            color: #00387b; /* Fallback */
             color: var(--primary-blue);
             margin-bottom: 15px;
         }
@@ -633,7 +598,6 @@
 
         .download-template {
             display: inline-block;
-            background: #00387b; /* Fallback */
             background: var(--primary-blue);
             color: white;
             padding: 10px 20px;
@@ -649,12 +613,10 @@
             background: #e8f4ff;
             border-radius: 10px;
             margin: 20px 0;
-            border: 2px solid #00387b; /* Fallback */
             border: 2px solid var(--primary-blue);
         }
 
         .scan-focus h3 {
-            color: #00387b; /* Fallback */
             color: var(--primary-blue);
             margin-bottom: 15px;
         }
@@ -671,7 +633,6 @@
         }
 
         .duplicate-warning {
-            color: #bb1e10; /* Fallback */
             color: var(--alert-red);
             font-size: 0.9rem;
             margin-top: 5px;
@@ -1539,13 +1500,14 @@
             }
         };
         
-        // Scanning Manager - FIXED BARCODE DETECTION
+        // Scanning Manager - Enhanced Workflow
         const scannerManager = {
             isScanning: false,
             currentRecordIndex: null,
             currentStream: null, // to hold the current media stream
             scanSuccessElement: null,
             tipsVisible: true,
+            continuousScanning: false, // Flag to track if we should restart after form
             
             init() {
                 // Event listeners
@@ -1610,6 +1572,9 @@
             
             async startCamera() {
                 if (this.isScanning) return;
+                
+                // Set continuous scanning flag
+                this.continuousScanning = true;
                 
                 // Check for secure context (HTTPS or localhost)
                 if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
@@ -1747,6 +1712,7 @@
                     }
                     
                     this.isScanning = false;
+                    this.continuousScanning = false; // Stop continuous scanning
                     
                     // Update UI
                     document.getElementById('stop-camera').disabled = true;
@@ -1769,6 +1735,9 @@
                 const code = result.codeResult.code;
                 console.log("Barcode detected:", code);
                 
+                // Stop scanning temporarily
+                this.stopTemporary();
+                
                 // Give visual feedback
                 this.showScanFeedback(true);
                 
@@ -1776,6 +1745,33 @@
                 setTimeout(() => {
                     this.processBarcode(code);
                 }, 800);
+            },
+            
+            stopTemporary() {
+                if (!this.isScanning) return;
+                
+                try {
+                    // Stop Quagga
+                    Quagga.stop();
+                    
+                    // Stop all media tracks
+                    if (this.currentStream) {
+                        this.currentStream.getTracks().forEach(track => track.stop());
+                        this.currentStream = null;
+                    }
+                    
+                    this.isScanning = false;
+                    
+                    // Update UI
+                    document.getElementById('stop-camera').disabled = true;
+                    document.getElementById('camera-status').innerHTML = 
+                        '<i class="fas fa-info-circle"></i> Camera paused for form input.';
+                    document.getElementById('camera-status').style.background = '#f0f2f5';
+                    document.getElementById('camera-status').style.color = 'inherit';
+                    
+                } catch (error) {
+                    console.error("Error stopping camera temporarily:", error);
+                }
             },
             
             showScanFeedback(isSuccess) {
@@ -1792,6 +1788,12 @@
                 const barcode = barcodeInput.value.trim();
                 
                 if (!barcode) return;
+                
+                // Stop scanning temporarily if it was running
+                const wasScanning = this.isScanning;
+                if (wasScanning) {
+                    this.stopTemporary();
+                }
                 
                 this.showScanFeedback(true);
                 setTimeout(() => {
@@ -1900,6 +1902,11 @@
                 document.getElementById('expiry-form').style.display = 'none';
                 storage.currentProduct = null;
                 this.currentRecordIndex = null;
+                
+                // Restart scanning if continuous scanning was enabled
+                if (this.continuousScanning) {
+                    this.startCamera();
+                }
             },
             
             validateBatchNumber() {
