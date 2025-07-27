@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Carrefour Expiry Control</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -22,6 +22,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -31,15 +32,16 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
             min-height: 100vh;
             padding-bottom: 70px;
+            touch-action: manipulation;
         }
 
         header {
             background: var(--primary-blue);
             color: white;
-            padding: 1rem;
+            padding: 0.8rem 1rem;
             display: flex;
             align-items: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -48,34 +50,39 @@
         .logo-container {
             display: flex;
             align-items: center;
-            margin-right: 15px;
+            margin-right: 10px;
+            flex: 1;
+            min-width: 0;
         }
 
         .logo {
-            height: 45px;
-            margin-right: 15px;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            height: 38px;
+            margin-right: 12px;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
         }
 
         .header-title {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 25px;
+            padding: 15px;
         }
 
         .dashboard {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 25px;
+            gap: 20px;
         }
 
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
             .dashboard {
                 grid-template-columns: 1fr 1fr;
             }
@@ -84,86 +91,70 @@
         .card {
             background: white;
             border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
         }
 
         .card-header {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
             border-bottom: 2px solid var(--action-orange);
         }
 
         .card-title {
             color: var(--primary-blue);
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            margin-left: 12px;
+            margin-left: 10px;
         }
 
         .card-icon {
             background: var(--primary-blue);
             color: white;
-            width: 42px;
-            height: 42px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            flex-shrink: 0;
         }
 
         .status-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin: 20px 0;
+            gap: 12px;
+            margin: 15px 0;
         }
 
         .status-card {
             background: white;
             border-radius: 10px;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
         }
 
         .status-count {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: bold;
             margin-bottom: 5px;
             line-height: 1;
         }
 
         .status-label {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: #666;
             font-weight: 500;
         }
 
-        .pending .status-count {
-            color: var(--action-orange);
-        }
-
-        .completed .status-count {
-            color: var(--confirm-green);
-        }
-
-        .expiring .status-count {
-            color: var(--alert-red);
-        }
-
         .file-input-container {
             position: relative;
-            margin: 20px 0;
+            margin: 15px 0;
             text-align: center;
         }
 
@@ -171,27 +162,17 @@
             display: inline-block;
             background: var(--confirm-green);
             color: white;
-            padding: 15px 30px;
+            padding: 12px 25px;
             border-radius: 50px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s;
-            box-shadow: 0 4px 8px rgba(38, 127, 82, 0.3);
-        }
-
-        .file-input-label:hover {
-            background: #1a6b46;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(38, 127, 82, 0.4);
-        }
-
-        .file-input {
-            position: absolute;
-            left: -9999px;
+            box-shadow: 0 3px 6px rgba(38, 127, 82, 0.3);
+            font-size: 0.95rem;
         }
 
         .scanner-container {
-            margin-top: 20px;
+            margin-top: 15px;
             position: relative;
             border-radius: 12px;
             overflow: hidden;
@@ -199,12 +180,14 @@
 
         #scanner-viewport {
             width: 100%;
-            height: 300px;
+            height: 40vh;
+            max-height: 350px;
+            min-height: 250px;
             background: #333;
             position: relative;
             overflow: hidden;
             border-radius: 12px;
-            border: 3px solid var(--primary-blue);
+            border: 2px solid var(--primary-blue);
         }
 
         #camera-preview {
@@ -225,9 +208,9 @@
         }
 
         .scanner-frame {
-            width: 70%;
-            height: 150px;
-            border: 3px solid var(--action-orange);
+            width: 80%;
+            height: 120px;
+            border: 2px solid var(--action-orange);
             border-radius: 8px;
             box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
             position: relative;
@@ -252,14 +235,14 @@
 
         .scanner-controls {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 15px;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 12px 25px;
+            padding: 12px 22px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
@@ -267,9 +250,11 @@
             transition: all 0.3s;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            font-size: 1rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            gap: 6px;
+            font-size: 0.95rem;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            min-width: 120px;
+            justify-content: center;
         }
 
         .btn:disabled {
@@ -282,21 +267,9 @@
             color: white;
         }
 
-        .btn-scan:hover:not(:disabled) {
-            background: #e06d1f;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(246, 120, 40, 0.4);
-        }
-
         .btn-export {
             background: var(--confirm-green);
             color: white;
-        }
-
-        .btn-export:hover:not(:disabled) {
-            background: #1a6b46;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(38, 127, 82, 0.4);
         }
 
         .btn-secondary {
@@ -304,126 +277,109 @@
             color: white;
         }
 
-        .btn-secondary:hover:not(:disabled) {
-            background: #002a5f;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 56, 123, 0.4);
-        }
-
         .btn-danger {
             background: var(--alert-red);
             color: white;
         }
 
-        .btn-danger:hover:not(:disabled) {
-            background: #a61a0e;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(187, 30, 16, 0.4);
-        }
-
         .manual-input {
-            margin-top: 20px;
+            margin-top: 15px;
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .manual-input input {
             flex: 1;
-            padding: 14px 18px;
+            padding: 12px 16px;
             border: 2px solid #ddd;
             border-radius: 50px;
             font-size: 16px;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
-            transition: border-color 0.3s;
-        }
-
-        .manual-input input:focus {
-            border-color: var(--action-orange);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(246, 120, 40, 0.2);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .expiry-form {
-            margin-top: 30px;
-            padding: 25px;
+            margin-top: 20px;
+            padding: 20px;
             background: #f8f9fa;
             border-radius: 12px;
-            border-left: 5px solid var(--action-orange);
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--action-orange);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-weight: 600;
             color: var(--primary-blue);
-            font-size: 1.05rem;
+            font-size: 1rem;
         }
 
         .form-group input {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus {
-            border-color: var(--action-orange);
-            box-shadow: 0 0 0 3px rgba(246, 120, 40, 0.2);
-            outline: none;
         }
 
         .form-actions {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             justify-content: flex-end;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .product-details {
             background: linear-gradient(to right, #e8f4ff, #d6e9ff);
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             border: 1px solid #c2d9ff;
         }
 
         .detail-row {
             display: flex;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
         }
 
         .detail-label {
             font-weight: 600;
-            min-width: 100px;
+            min-width: 80px;
             color: var(--primary-blue);
+            font-size: 0.9rem;
         }
 
         .detail-value {
             flex: 1;
             color: var(--text-dark);
+            font-size: 0.95rem;
+            min-width: 60%;
         }
 
         .tabs {
             display: flex;
-            gap: 5px;
-            margin-bottom: 20px;
+            gap: 4px;
+            margin-bottom: 15px;
             border-bottom: 2px solid #e1e4e8;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 2px;
         }
 
         .tab {
-            padding: 12px 25px;
+            padding: 10px 18px;
             cursor: pointer;
             font-weight: 600;
-            border-radius: 8px 8px 0 0;
+            border-radius: 6px 6px 0 0;
             background: #f0f2f5;
             transition: all 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
         }
 
         .tab.active {
@@ -442,220 +398,173 @@
         .product-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 12px;
+            font-size: 0.9rem;
         }
 
         .product-table th {
             background: var(--primary-blue);
             color: white;
-            padding: 14px;
+            padding: 12px 10px;
             text-align: left;
             font-weight: 600;
+            font-size: 0.85rem;
         }
 
         .product-table td {
-            padding: 14px;
+            padding: 12px 10px;
             border-bottom: 1px solid #e1e4e8;
-        }
-
-        .product-table tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-
-        .product-table tr:hover {
-            background-color: #edf2ff;
+            font-size: 0.85rem;
         }
 
         .expiry-badge {
             display: inline-block;
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 50px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
-        }
-
-        .expiry-normal {
-            background: #e3f9ee;
-            color: var(--confirm-green);
-        }
-
-        .expiring-soon {
-            background: #fef0e5;
-            color: var(--action-orange);
-        }
-
-        .expired {
-            background: #fdecea;
-            color: var(--alert-red);
         }
 
         .action-cell {
             display: flex;
-            gap: 8px;
+            gap: 6px;
+            flex-wrap: wrap;
         }
 
         .action-btn {
-            padding: 6px 12px;
+            padding: 5px 10px;
             border-radius: 6px;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             cursor: pointer;
             transition: all 0.2s;
-        }
-
-        .edit-btn {
-            background: #e3f0ff;
-            color: var(--primary-blue);
-            border: 1px solid #b8d4ff;
-        }
-
-        .edit-btn:hover {
-            background: #d0e3ff;
-        }
-
-        .delete-btn {
-            background: #fdecea;
-            color: var(--alert-red);
-            border: 1px solid #f9c9c5;
-        }
-
-        .delete-btn:hover {
-            background: #fcdbd7;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #777;
-        }
-
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: #cbd5e0;
+            white-space: nowrap;
         }
 
         .footer {
             background: var(--primary-blue);
             color: white;
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             position: fixed;
             bottom: 0;
             width: 100%;
-            font-size: 0.95rem;
-            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+            font-size: 0.85rem;
+            box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.1);
         }
 
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
+            top: 15px;
+            right: 15px;
+            left: 15px;
+            padding: 12px 20px;
             border-radius: 8px;
             color: white;
             font-weight: 500;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             z-index: 1000;
-            transform: translateX(150%);
+            transform: translateY(-150%);
             transition: transform 0.4s ease;
+            font-size: 0.9rem;
         }
 
         .notification.show {
-            transform: translateX(0);
+            transform: translateY(0);
         }
 
         .notification.success {
             background: var(--confirm-green);
-            border-left: 5px solid #1a6b46;
+            border-left: 4px solid #1a6b46;
         }
 
         .notification.error {
             background: var(--alert-red);
-            border-left: 5px solid #a61a0e;
+            border-left: 4px solid #a61a0e;
         }
 
         .import-guide {
             background: #f0f8ff;
             border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
+            padding: 15px;
+            margin: 15px 0;
             border: 2px dashed var(--primary-blue);
         }
 
         .import-guide h3 {
             color: var(--primary-blue);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
         }
 
         .import-guide ol {
             padding-left: 20px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .import-guide li {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
         }
 
         .download-template {
             display: inline-block;
             background: var(--primary-blue);
             color: white;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 6px;
             text-decoration: none;
             font-weight: 600;
-            margin-top: 10px;
+            margin-top: 8px;
+            font-size: 0.9rem;
         }
 
         .scan-focus {
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             background: #e8f4ff;
             border-radius: 10px;
-            margin: 20px 0;
+            margin: 15px 0;
             border: 2px solid var(--primary-blue);
         }
 
         .scan-focus h3 {
             color: var(--primary-blue);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
         }
 
         .scan-focus p {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
         }
 
         .data-actions {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 15px;
             justify-content: center;
-        }
-
-        .duplicate-warning {
-            color: var(--alert-red);
-            font-size: 0.9rem;
-            margin-top: 5px;
-            display: none;
+            flex-wrap: wrap;
         }
 
         .camera-status {
             text-align: center;
-            padding: 10px;
+            padding: 8px;
             background: #f0f2f5;
             border-radius: 8px;
-            margin: 10px 0;
+            margin: 8px 0;
+            font-size: 0.9rem;
         }
 
         .scan-tips {
             background: #fff9e6;
             border-radius: 10px;
-            padding: 15px;
-            margin-top: 15px;
+            padding: 12px;
+            margin-top: 12px;
             border-left: 4px solid #f67828;
             transition: all 0.5s ease;
             max-height: 300px;
             overflow: hidden;
+            font-size: 0.9rem;
         }
         
         .scan-tips.hidden {
@@ -667,10 +576,11 @@
 
         .scan-tips h4 {
             color: #00387b;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            font-size: 1rem;
         }
 
         .scan-tips ul {
@@ -678,10 +588,10 @@
         }
 
         .scan-tips li {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: flex;
             align-items: flex-start;
-            gap: 8px;
+            gap: 6px;
         }
         
         /* Scanner feedback */
@@ -706,7 +616,7 @@
         }
         
         .scan-success-icon {
-            font-size: 5rem;
+            font-size: 4rem;
             color: white;
             animation: scaleUp 0.5s ease;
         }
@@ -717,115 +627,197 @@
             100% { transform: scale(1); opacity: 1; }
         }
         
-        .scan-error {
-            background: rgba(187, 30, 16, 0.7);
-        }
-        
         /* Toggle button for scanning tips */
         .tips-toggle {
             background: #00387b;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: absolute;
-            right: 20px;
-            bottom: 20px;
+            right: 15px;
+            bottom: 15px;
             cursor: pointer;
             z-index: 20;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 0.9rem;
         }
         
-        .tips-toggle:hover {
-            background: #002a5f;
+        /* Mobile menu toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            margin-left: 10px;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .status-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .header-title {
-                font-size: 1.2rem;
+        /* Mobile specific adjustments */
+        @media (max-width: 767px) {
+            header {
+                padding: 0.7rem 0.8rem;
             }
             
             .logo {
-                height: 38px;
-            }
-            
-            .card {
-                padding: 20px;
-            }
-            
-            #scanner-viewport {
-                height: 250px;
-            }
-            
-            .scanner-controls {
-                flex-direction: column;
-            }
-            
-            .manual-input {
-                flex-direction: column;
-            }
-            
-            .tabs {
-                overflow-x: auto;
-                padding-bottom: 5px;
-            }
-            
-            .data-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            header {
-                padding: 12px 10px;
+                height: 34px;
+                margin-right: 10px;
             }
             
             .header-title {
                 font-size: 1.1rem;
             }
             
-            .logo {
-                height: 35px;
-                margin-right: 10px;
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 15px;
+                border-radius: 10px;
+            }
+            
+            .card-header {
+                margin-bottom: 12px;
             }
             
             .card-title {
-                font-size: 1.15rem;
+                font-size: 1.1rem;
+            }
+            
+            .card-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+            }
+            
+            .status-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .status-card {
+                padding: 12px;
+            }
+            
+            .status-count {
+                font-size: 1.8rem;
+            }
+            
+            #scanner-viewport {
+                height: 35vh;
+                min-height: 220px;
+            }
+            
+            .scanner-frame {
+                width: 85%;
+                height: 100px;
+            }
+            
+            .scanner-controls {
+                gap: 8px;
             }
             
             .btn {
-                padding: 10px 20px;
-                font-size: 0.95rem;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+                min-width: 110px;
+                flex: 1;
+            }
+            
+            .manual-input {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .expiry-form {
+                padding: 15px;
             }
             
             .form-actions {
                 flex-direction: column;
+                gap: 8px;
             }
             
             .form-actions .btn {
                 width: 100%;
             }
             
+            .product-table {
+                font-size: 0.8rem;
+            }
+            
+            .product-table th, 
+            .product-table td {
+                padding: 8px 6px;
+            }
+            
+            .tabs {
+                gap: 3px;
+            }
+            
+            .tab {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .footer {
+                padding: 12px;
+                font-size: 0.8rem;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+                gap: 4px;
+            }
+            
+            .detail-label, .detail-value {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1rem;
+            }
+            
+            .logo {
+                height: 32px;
+            }
+            
+            .card-title {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 10px;
+                font-size: 0.85rem;
+            }
+            
             #scanner-viewport {
-                height: 220px;
+                height: 30vh;
+                min-height: 200px;
+            }
+            
+            .scanner-frame {
+                width: 90%;
+                height: 90px;
             }
             
             .tips-toggle {
                 right: 10px;
                 bottom: 10px;
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -836,6 +828,9 @@
             <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiPjxyZWN0IHdpZHRoPSIyNDAiIGhlaWdodD0iODAiIGZpbGw9IiMwMDM4N2IiLz48cGF0aCBkPSJNNTAgMjAgTDIwIDUwIEw1MCA4MCBMMTAgODAgTDEwIDIwIFoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNjAgMjAgTDkwIDUwIEw2MCA4MCBMMTAwIDgwIEwxMDAgMjAgWiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik03MCAyMCBMMTIwIDUwIEw3MCA4MCBMMTkwIDgwIEwxOTAgMjAgWiIgZmlsbD0iI2ZmZiIvPjx0ZXh0IHg9IjEyMCIgeT0iNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyMCIgZmlsbD0iI2ZmZiI+UGFraXN0YW48L3RleHQ+PC9zdmc+" alt="Carrefour Pakistan" class="logo">
             <h1 class="header-title">Expiry Control System</h1>
         </div>
+        <button class="mobile-menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
     </header>
 
     <div class="container">
@@ -887,7 +882,6 @@
                 <div class="scan-focus">
                     <h3><i class="fas fa-camera"></i> Scanning Mode</h3>
                     <p>After importing your product data, the system will automatically switch to scanning mode.</p>
-                    <p>No product list will be displayed - all data is used exclusively for scanning operations.</p>
                 </div>
             </div>
             
@@ -1050,7 +1044,7 @@
                         </select>
                     </div>
                     
-                    <button class="btn btn-export" id="export-btn" style="width: 100%; padding: 15px;">
+                    <button class="btn btn-export" id="export-btn">
                         <i class="fas fa-file-export"></i> Export to Excel
                     </button>
                 </div>
@@ -1077,16 +1071,6 @@
                     <button class="btn btn-secondary" id="download-data">
                         <i class="fas fa-download"></i> Download Backup
                     </button>
-                </div>
-                
-                <div class="scan-focus">
-                    <h4><i class="fas fa-info-circle"></i> Important Notes</h4>
-                    <ul>
-                        <li>Uploading a new file will replace existing product data</li>
-                        <li>Expiry records will be preserved when uploading new product data</li>
-                        <li>Clearing data will remove both products and expiry records</li>
-                        <li>Download backup before clearing data</li>
-                    </ul>
                 </div>
             </div>
         </div>
