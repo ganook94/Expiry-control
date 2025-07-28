@@ -305,6 +305,10 @@
             border-left: 4px solid var(--action-orange);
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
         }
+        
+        .new-product-form {
+            border-left: 4px solid var(--confirm-green);
+        }
 
         .form-group {
             margin-bottom: 18px;
@@ -718,6 +722,22 @@
             display: block;
             color: #ccc;
         }
+        
+        .new-product-notice {
+            background: #e8f4ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary-blue);
+        }
+        
+        .new-product-notice h3 {
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
 
         /* Mobile specific adjustments */
         @media (max-width: 767px) {
@@ -1018,6 +1038,7 @@
                     </button>
                 </div>
                 
+                <!-- Existing Product Form -->
                 <div class="expiry-form" id="expiry-form">
                     <div class="product-details">
                         <div class="detail-row">
@@ -1061,6 +1082,56 @@
                         </button>
                         <button class="btn btn-export" id="save-form">
                             <i class="fas fa-save"></i> Save Record
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- New Product Form -->
+                <div class="expiry-form new-product-form" id="new-product-form" style="display: none;">
+                    <div class="new-product-notice">
+                        <h3><i class="fas fa-exclamation-circle"></i> Product Not Found</h3>
+                        <p>This barcode is not in the database. Please add product details below.</p>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-label">Scanned Barcode:</div>
+                        <div class="detail-value" id="new-form-barcode">-</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-itemno"><i class="fas fa-hashtag"></i> Item Number</label>
+                        <input type="text" id="new-itemno" placeholder="Enter item number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-description"><i class="fas fa-align-left"></i> Description</label>
+                        <input type="text" id="new-description" placeholder="Enter product description">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-batch-number"><i class="fas fa-hashtag"></i> Batch Number</label>
+                        <input type="text" id="new-batch-number" placeholder="Enter batch number (4-12 characters)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-quantity"><i class="fas fa-cubes"></i> Quantity</label>
+                        <input type="number" id="new-quantity" min="1" value="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-expiry-date"><i class="fas fa-calendar-day"></i> Expiry Date</label>
+                        <div class="date-input-container">
+                            <input type="date" id="new-expiry-date" required>
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn btn-danger" id="cancel-new-form">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button class="btn btn-export" id="save-new-form">
+                            <i class="fas fa-plus-circle"></i> Add Product & Record
                         </button>
                     </div>
                 </div>
@@ -1253,6 +1324,23 @@
                     this.expiryRecords.push(record);
                     this.saveRecords();
                     this.showNotification('New expiry record saved!', 'success');
+                }
+            },
+            
+            addProduct(product) {
+                // Check if product already exists
+                const existingIndex = this.products.findIndex(p => p.barcode === product.barcode);
+                
+                if (existingIndex >= 0) {
+                    // Update existing product
+                    this.products[existingIndex] = product;
+                    this.saveProducts();
+                    this.showNotification('Product updated successfully!', 'success');
+                } else {
+                    // Add new product
+                    this.products.push(product);
+                    this.saveProducts();
+                    this.showNotification('New product added!', 'success');
                 }
             },
             
@@ -1573,6 +1661,8 @@
                 // Form handling
                 document.getElementById('cancel-form').addEventListener('click', this.hideForm.bind(this));
                 document.getElementById('save-form').addEventListener('click', this.saveExpiryRecord.bind(this));
+                document.getElementById('cancel-new-form').addEventListener('click', this.hideNewProductForm.bind(this));
+                document.getElementById('save-new-form').addEventListener('click', this.saveNewProductAndRecord.bind(this));
                 
                 // Form field listeners for duplicate checking
                 document.getElementById('batch-number').addEventListener('input', this.checkForDuplicate.bind(this));
@@ -1595,8 +1685,9 @@
                 // Tips toggle button
                 document.getElementById('tips-toggle').addEventListener('click', this.toggleTips.bind(this));
                 
-                // Hide form initially
+                // Hide forms initially
                 this.hideForm();
+                this.hideNewProductForm();
                 
                 // Auto-hide tips after 10 seconds
                 setTimeout(() => {
@@ -1858,16 +1949,17 @@
                 if (product) {
                     this.showExpiryForm(product);
                 } else {
-                    storage.showNotification("Product not found. Import product data first.", 'error');
-                    
-                    // Restart scanning if continuous scanning was enabled
-                    if (this.continuousScanning) {
-                        this.startCamera();
-                    }
+                    this.showNewProductForm(barcode);
                 }
             },
             
             showExpiryForm(product) {
+                // Hide new product form
+                this.hideNewProductForm();
+                
+                // Show existing product form
+                document.getElementById('expiry-form').style.display = 'block';
+                
                 storage.currentProduct = product;
                 
                 // Populate product details
@@ -1884,13 +1976,34 @@
                 // Hide duplicate warning
                 document.getElementById('duplicate-warning').style.display = 'none';
                 
-                // Show the form
-                document.getElementById('expiry-form').style.display = 'block';
-                
                 // Scroll to the form
                 document.getElementById('expiry-form').scrollIntoView({ behavior: 'smooth' });
                 
-                // REMOVED min date restriction to allow past dates
+                // Set min date to today for expiry date
+                const today = new Date();
+                const minDate = formatDate(today);
+                document.getElementById('expiry-date').min = minDate;
+            },
+            
+            showNewProductForm(barcode) {
+                // Hide existing product form
+                this.hideForm();
+                
+                // Show new product form
+                document.getElementById('new-product-form').style.display = 'block';
+                
+                // Set the barcode
+                document.getElementById('new-form-barcode').textContent = barcode;
+                
+                // Reset form fields
+                document.getElementById('new-itemno').value = '';
+                document.getElementById('new-description').value = '';
+                document.getElementById('new-batch-number').value = '';
+                document.getElementById('new-quantity').value = '1';
+                document.getElementById('new-expiry-date').value = '';
+                
+                // Scroll to the form
+                document.getElementById('new-product-form').scrollIntoView({ behavior: 'smooth' });
             },
             
             checkForDuplicate() {
@@ -1957,23 +2070,28 @@
                 }
             },
             
-            validateBatchNumber() {
-                const batchInput = document.getElementById('batch-number');
-                const batch = batchInput.value.trim();
+            hideNewProductForm() {
+                document.getElementById('new-product-form').style.display = 'none';
                 
+                // Restart scanning if continuous scanning was enabled
+                if (this.continuousScanning) {
+                    this.startCamera();
+                }
+            },
+            
+            validateBatchNumber(batch) {
                 // Allow alphanumeric with dashes/underscores (4-20 characters)
                 if (batch && /^[\w\- ]{4,20}$/.test(batch)) {
-                    batchInput.style.borderColor = '#ddd';
                     return true;
                 } else {
-                    batchInput.style.borderColor = '#bb1e10';
                     return false;
                 }
             },
             
             saveExpiryRecord() {
                 // Validate inputs
-                if (!this.validateBatchNumber()) {
+                const batch = document.getElementById('batch-number').value.trim();
+                if (!this.validateBatchNumber(batch)) {
                     storage.showNotification("Batch number must be 4-20 alphanumeric characters (may include - and _)", 'error');
                     return;
                 }
@@ -1995,7 +2113,7 @@
                     barcode: storage.currentProduct.barcode,
                     itemNo: storage.currentProduct.itemNo,
                     description: storage.currentProduct.description,
-                    batch: document.getElementById('batch-number').value,
+                    batch: batch,
                     quantity: quantity,
                     expiryDate: expiryDate,
                     scannedDate: formatDate(new Date())
@@ -2010,6 +2128,75 @@
                 
                 // Hide form
                 this.hideForm();
+                
+                // Restart camera automatically
+                if (this.continuousScanning) {
+                    setTimeout(() => {
+                        this.startCamera();
+                    }, 500);
+                }
+            },
+            
+            saveNewProductAndRecord() {
+                const barcode = document.getElementById('new-form-barcode').textContent;
+                const itemNo = document.getElementById('new-itemno').value.trim();
+                const description = document.getElementById('new-description').value.trim();
+                const batch = document.getElementById('new-batch-number').value.trim();
+                const quantity = parseInt(document.getElementById('new-quantity').value);
+                const expiryDate = document.getElementById('new-expiry-date').value;
+                
+                // Validate inputs
+                if (!itemNo) {
+                    storage.showNotification("Please enter an item number", 'error');
+                    return;
+                }
+                
+                if (!description) {
+                    storage.showNotification("Please enter a description", 'error');
+                    return;
+                }
+                
+                if (!this.validateBatchNumber(batch)) {
+                    storage.showNotification("Batch number must be 4-20 alphanumeric characters (may include - and _)", 'error');
+                    return;
+                }
+                
+                if (isNaN(quantity) || quantity < 1) {
+                    storage.showNotification("Please enter a valid quantity (minimum 1)", 'error');
+                    return;
+                }
+                
+                if (!expiryDate) {
+                    storage.showNotification("Please select an expiry date", 'error');
+                    return;
+                }
+                
+                // Create new product
+                const newProduct = {
+                    barcode: barcode,
+                    itemNo: itemNo,
+                    description: description
+                };
+                
+                // Add to products list
+                storage.addProduct(newProduct);
+                
+                // Create record
+                const record = {
+                    barcode: barcode,
+                    itemNo: itemNo,
+                    description: description,
+                    batch: batch,
+                    quantity: quantity,
+                    expiryDate: expiryDate,
+                    scannedDate: formatDate(new Date())
+                };
+                
+                // Add to expiry records
+                storage.addRecord(record);
+                
+                // Hide form
+                this.hideNewProductForm();
                 
                 // Restart camera automatically
                 if (this.continuousScanning) {
