@@ -450,6 +450,21 @@
             font-weight: 600;
         }
 
+        .expired {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .expiring-soon {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .expiry-normal {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
         .action-cell {
             display: flex;
             gap: 6px;
@@ -682,6 +697,28 @@
             margin-left: 10px;
         }
 
+        /* Table responsive container */
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 -15px;
+            padding: 0 15px;
+            width: calc(100% + 30px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+            color: #ccc;
+        }
+
         /* Mobile specific adjustments */
         @media (max-width: 767px) {
             header {
@@ -774,6 +811,7 @@
             
             .product-table {
                 font-size: 0.8rem;
+                min-width: 700px;
             }
             
             .product-table th, 
@@ -843,6 +881,16 @@
                 width: 28px;
                 height: 28px;
                 font-size: 0.8rem;
+            }
+            
+            .expiry-badge {
+                font-size: 0.7rem;
+                padding: 3px 8px;
+            }
+            
+            .action-btn {
+                padding: 4px 8px;
+                font-size: 0.7rem;
             }
         }
     </style>
@@ -1842,10 +1890,7 @@
                 // Scroll to the form
                 document.getElementById('expiry-form').scrollIntoView({ behavior: 'smooth' });
                 
-                // Set min date to today for expiry date
-                const today = new Date();
-                const minDate = formatDate(today);
-                document.getElementById('expiry-date').min = minDate;
+                // REMOVED min date restriction to allow past dates
             },
             
             checkForDuplicate() {
