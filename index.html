@@ -9,13 +9,15 @@
     <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
     <style>
         :root {
-            --primary-blue: #00387b;
-            --alert-red: #bb1e10;
-            --action-orange: #f67828;
-            --confirm-green: #237f52;
-            --light-gray: #f5f7fa;
-            --dark-gray: #333;
-            --text-dark: #2c3e50;
+            --primary-blue: #0066cc;
+            --alert-red: #ff4444;
+            --action-orange: #ff9900;
+            --confirm-green: #00cc66;
+            --dark-bg: #1a1a1a;
+            --panel-bg: #2d2d2d;
+            --text-light: #f0f0f0;
+            --text-muted: #aaaaaa;
+            --border-dark: #444;
         }
 
         * {
@@ -28,23 +30,24 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            color: var(--text-dark);
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+            color: var(--text-light);
+            background-color: var(--dark-bg);
             min-height: 100vh;
             padding-bottom: 70px;
             touch-action: manipulation;
         }
 
+        /* Datalogic-style header */
         header {
             background: var(--primary-blue);
             color: white;
             padding: 0.8rem 1rem;
             display: flex;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .logo-container {
@@ -58,7 +61,6 @@
         .logo {
             height: 38px;
             margin-right: 12px;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
         }
 
         .header-title {
@@ -73,27 +75,15 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 15px;
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        @media (min-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr 1fr;
-            }
+            padding: 10px;
         }
 
         .card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: var(--panel-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-dark);
         }
 
         .card-header {
@@ -105,7 +95,7 @@
         }
 
         .card-title {
-            color: var(--primary-blue);
+            color: var(--text-light);
             font-size: 1.2rem;
             font-weight: 600;
             margin-left: 10px;
@@ -124,19 +114,20 @@
             flex-shrink: 0;
         }
 
+        /* Status indicators */
         .status-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            gap: 8px;
             margin: 15px 0;
         }
 
         .status-card {
-            background: white;
-            border-radius: 10px;
+            background: var(--dark-bg);
+            border-radius: 8px;
             padding: 15px;
             text-align: center;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-dark);
         }
 
         .status-count {
@@ -144,49 +135,31 @@
             font-weight: bold;
             margin-bottom: 5px;
             line-height: 1;
+            color: var(--text-light);
         }
 
         .status-label {
             font-size: 0.85rem;
-            color: #666;
+            color: var(--text-muted);
             font-weight: 500;
         }
 
-        .file-input-container {
-            position: relative;
-            margin: 15px 0;
-            text-align: center;
-        }
-
-        .file-input-label {
-            display: inline-block;
-            background: var(--confirm-green);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 3px 6px rgba(38, 127, 82, 0.3);
-            font-size: 0.95rem;
-        }
-
+        /* Scanner viewport - larger and more prominent */
         .scanner-container {
             margin-top: 15px;
             position: relative;
-            border-radius: 12px;
+            border-radius: 8px;
             overflow: hidden;
         }
 
         #scanner-viewport {
             width: 100%;
-            height: 40vh;
-            max-height: 350px;
-            min-height: 250px;
-            background: #333;
+            height: 50vh;
+            min-height: 300px;
+            background: #000;
             position: relative;
             overflow: hidden;
-            border-radius: 12px;
+            border-radius: 8px;
             border: 2px solid var(--primary-blue);
         }
 
@@ -209,10 +182,10 @@
 
         .scanner-frame {
             width: 80%;
-            height: 120px;
+            height: 150px;
             border: 2px solid var(--action-orange);
             border-radius: 8px;
-            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.7);
             position: relative;
         }
 
@@ -224,7 +197,7 @@
             height: 3px;
             background: var(--alert-red);
             animation: scan 2s infinite linear;
-            box-shadow: 0 0 10px rgba(187, 30, 16, 0.8);
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.8);
         }
 
         @keyframes scan {
@@ -233,77 +206,64 @@
             100% { top: 0; }
         }
 
-        .scanner-controls {
-            display: flex;
-            gap: 12px;
-            margin-top: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
+        /* Large buttons for Datalogic style */
         .btn {
-            padding: 12px 22px;
+            padding: 16px 24px;
             border: none;
-            border-radius: 50px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.95rem;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            min-width: 120px;
             justify-content: center;
+            gap: 8px;
+            font-size: 1.1rem;
+            min-width: 140px;
+            background: var(--primary-blue);
+            color: white;
+            margin: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+            background: #555;
         }
 
         .btn-scan {
             background: var(--action-orange);
-            color: white;
         }
 
         .btn-export {
             background: var(--confirm-green);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: var(--primary-blue);
-            color: white;
         }
 
         .btn-danger {
             background: var(--alert-red);
-            color: white;
         }
 
-        .manual-input {
-            margin-top: 15px;
+        .btn-block {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .scanner-controls {
             display: flex;
-            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 15px 0;
         }
 
-        .manual-input input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 2px solid #ddd;
-            border-radius: 50px;
-            font-size: 16px;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
+        /* Forms with dark theme */
         .expiry-form {
             margin-top: 20px;
             padding: 20px;
-            background: #f8f9fa;
-            border-radius: 12px;
+            background: var(--dark-bg);
+            border-radius: 8px;
             border-left: 4px solid var(--action-orange);
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         
         .new-product-form {
@@ -319,30 +279,32 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--primary-blue);
+            color: var(--text-light);
             font-size: 1rem;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
+            padding: 14px;
+            border: 1px solid var(--border-dark);
             border-radius: 8px;
             font-size: 16px;
+            background: #333;
+            color: var(--text-light);
         }
         
-        /* Calendar icon */
         .date-input-container {
             position: relative;
         }
         
         .date-input-container input[type="date"] {
             width: 100%;
-            padding: 12px 40px 12px 12px;
-            border: 1px solid #ddd;
+            padding: 14px 40px 14px 14px;
+            border: 1px solid var(--border-dark);
             border-radius: 8px;
             font-size: 16px;
-            background-color: white;
+            background-color: #333;
+            color: var(--text-light);
             cursor: pointer;
         }
         
@@ -362,12 +324,13 @@
             margin-top: 15px;
         }
 
+        /* Product details */
         .product-details {
-            background: linear-gradient(to right, #e8f4ff, #d6e9ff);
+            background: rgba(0, 102, 204, 0.1);
             padding: 15px;
-            border-radius: 10px;
+            border-radius: 8px;
             margin-bottom: 20px;
-            border: 1px solid #c2d9ff;
+            border: 1px solid rgba(0, 102, 204, 0.3);
         }
 
         .detail-row {
@@ -378,37 +341,41 @@
 
         .detail-label {
             font-weight: 600;
-            min-width: 80px;
-            color: var(--primary-blue);
+            min-width: 100px;
+            color: var(--text-muted);
             font-size: 0.9rem;
         }
 
         .detail-value {
             flex: 1;
-            color: var(--text-dark);
+            color: var(--text-light);
             font-size: 0.95rem;
             min-width: 60%;
         }
 
+        /* Tabs */
         .tabs {
             display: flex;
             gap: 4px;
             margin-bottom: 15px;
-            border-bottom: 2px solid #e1e4e8;
+            border-bottom: 2px solid var(--border-dark);
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             padding-bottom: 2px;
         }
 
         .tab {
-            padding: 10px 18px;
+            padding: 12px 20px;
             cursor: pointer;
             font-weight: 600;
             border-radius: 6px 6px 0 0;
-            background: #f0f2f5;
+            background: var(--dark-bg);
             transition: all 0.3s;
-            font-size: 0.9rem;
+            font-size: 1rem;
             white-space: nowrap;
+            color: var(--text-muted);
+            border: 1px solid var(--border-dark);
+            border-bottom: none;
         }
 
         .tab.active {
@@ -424,6 +391,7 @@
             display: block;
         }
 
+        /* Table styling for dark theme */
         .product-table {
             width: 100%;
             border-collapse: collapse;
@@ -442,8 +410,9 @@
 
         .product-table td {
             padding: 12px 10px;
-            border-bottom: 1px solid #e1e4e8;
+            border-bottom: 1px solid var(--border-dark);
             font-size: 0.85rem;
+            color: var(--text-light);
         }
 
         .expiry-badge {
@@ -455,18 +424,18 @@
         }
 
         .expired {
-            background-color: #f8d7da;
-            color: #721c24;
+            background-color: #ff4444;
+            color: white;
         }
         
         .expiring-soon {
-            background-color: #fff3cd;
-            color: #856404;
+            background-color: #ff9900;
+            color: black;
         }
         
         .expiry-normal {
-            background-color: #d4edda;
-            color: #155724;
+            background-color: #00cc66;
+            color: white;
         }
 
         .action-cell {
@@ -476,26 +445,35 @@
         }
 
         .action-btn {
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 6px;
             font-size: 0.8rem;
             cursor: pointer;
             transition: all 0.2s;
             white-space: nowrap;
-        }
-
-        .footer {
             background: var(--primary-blue);
             color: white;
+            border: none;
+        }
+
+        .action-btn.delete-btn {
+            background: var(--alert-red);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-bg);
+            color: var(--text-muted);
             text-align: center;
             padding: 15px;
             position: fixed;
             bottom: 0;
             width: 100%;
             font-size: 0.85rem;
-            box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.1);
+            border-top: 1px solid var(--border-dark);
         }
 
+        /* Notification */
         .notification {
             position: fixed;
             top: 15px;
@@ -505,7 +483,7 @@
             border-radius: 8px;
             color: white;
             font-weight: 500;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
             z-index: 1000;
             transform: translateY(-150%);
             transition: transform 0.4s ease;
@@ -518,24 +496,25 @@
 
         .notification.success {
             background: var(--confirm-green);
-            border-left: 4px solid #1a6b46;
+            border-left: 4px solid #00aa55;
         }
 
         .notification.error {
             background: var(--alert-red);
-            border-left: 4px solid #a61a0e;
+            border-left: 4px solid #cc0000;
         }
 
+        /* Import guide */
         .import-guide {
-            background: #f0f8ff;
-            border-radius: 10px;
+            background: rgba(0, 102, 204, 0.1);
+            border-radius: 8px;
             padding: 15px;
             margin: 15px 0;
             border: 2px dashed var(--primary-blue);
         }
 
         .import-guide h3 {
-            color: var(--primary-blue);
+            color: var(--text-light);
             margin-bottom: 12px;
             font-size: 1.1rem;
         }
@@ -543,6 +522,7 @@
         .import-guide ol {
             padding-left: 20px;
             margin-bottom: 12px;
+            color: var(--text-muted);
         }
 
         .import-guide li {
@@ -554,7 +534,7 @@
             display: inline-block;
             background: var(--primary-blue);
             color: white;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 6px;
             text-decoration: none;
             font-weight: 600;
@@ -562,17 +542,18 @@
             font-size: 0.9rem;
         }
 
+        /* Scan focus */
         .scan-focus {
             text-align: center;
             padding: 15px;
-            background: #e8f4ff;
-            border-radius: 10px;
+            background: rgba(0, 102, 204, 0.1);
+            border-radius: 8px;
             margin: 15px 0;
             border: 2px solid var(--primary-blue);
         }
 
         .scan-focus h3 {
-            color: var(--primary-blue);
+            color: var(--text-light);
             margin-bottom: 12px;
             font-size: 1.1rem;
         }
@@ -580,8 +561,10 @@
         .scan-focus p {
             margin-bottom: 12px;
             font-size: 0.9rem;
+            color: var(--text-muted);
         }
 
+        /* Data actions */
         .data-actions {
             display: flex;
             gap: 12px;
@@ -593,18 +576,21 @@
         .camera-status {
             text-align: center;
             padding: 8px;
-            background: #f0f2f5;
+            background: var(--dark-bg);
             border-radius: 8px;
             margin: 8px 0;
             font-size: 0.9rem;
+            color: var(--text-muted);
+            border: 1px solid var(--border-dark);
         }
 
+        /* Scan tips */
         .scan-tips {
-            background: #fff9e6;
-            border-radius: 10px;
+            background: rgba(255, 153, 0, 0.1);
+            border-radius: 8px;
             padding: 12px;
             margin-top: 12px;
-            border-left: 4px solid #f67828;
+            border-left: 4px solid var(--action-orange);
             transition: all 0.5s ease;
             max-height: 300px;
             overflow: hidden;
@@ -619,7 +605,7 @@
         }
 
         .scan-tips h4 {
-            color: #00387b;
+            color: var(--text-light);
             margin-bottom: 8px;
             display: flex;
             align-items: center;
@@ -629,6 +615,7 @@
 
         .scan-tips ul {
             padding-left: 20px;
+            color: var(--text-muted);
         }
 
         .scan-tips li {
@@ -645,7 +632,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(35, 127, 82, 0.7);
+            background: rgba(0, 204, 102, 0.7);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -673,7 +660,7 @@
         
         /* Toggle button for scanning tips */
         .tips-toggle {
-            background: #00387b;
+            background: var(--primary-blue);
             color: white;
             border: none;
             border-radius: 50%;
@@ -691,54 +678,6 @@
             font-size: 0.9rem;
         }
         
-        /* Mobile menu toggle */
-        .mobile-menu-toggle {
-            display: none;
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            margin-left: 10px;
-        }
-
-        /* Table responsive container */
-        .table-container {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            margin: 0 -15px;
-            padding: 0 15px;
-            width: calc(100% + 30px);
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-        }
-        
-        .empty-state i {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            display: block;
-            color: #ccc;
-        }
-        
-        .new-product-notice {
-            background: #e8f4ff;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 15px 0;
-            border-left: 4px solid var(--primary-blue);
-        }
-        
-        .new-product-notice h3 {
-            color: var(--primary-blue);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
         /* Mobile specific adjustments */
         @media (max-width: 767px) {
             header {
@@ -760,7 +699,7 @@
             
             .card {
                 padding: 15px;
-                border-radius: 10px;
+                border-radius: 8px;
             }
             
             .card-header {
@@ -791,23 +730,19 @@
             }
             
             #scanner-viewport {
-                height: 35vh;
-                min-height: 220px;
+                height: 40vh;
+                min-height: 250px;
             }
             
             .scanner-frame {
                 width: 85%;
-                height: 100px;
-            }
-            
-            .scanner-controls {
-                gap: 8px;
+                height: 120px;
             }
             
             .btn {
-                padding: 10px 15px;
-                font-size: 0.9rem;
-                min-width: 110px;
+                padding: 14px;
+                font-size: 1rem;
+                min-width: 120px;
                 flex: 1;
             }
             
@@ -853,10 +788,6 @@
                 font-size: 0.8rem;
             }
             
-            .mobile-menu-toggle {
-                display: block;
-            }
-            
             .detail-row {
                 flex-direction: column;
                 gap: 4px;
@@ -881,18 +812,18 @@
             }
             
             .btn {
-                padding: 10px;
-                font-size: 0.85rem;
+                padding: 12px;
+                font-size: 0.95rem;
             }
             
             #scanner-viewport {
-                height: 30vh;
-                min-height: 200px;
+                height: 35vh;
+                min-height: 220px;
             }
             
             .scanner-frame {
                 width: 90%;
-                height: 90px;
+                height: 100px;
             }
             
             .tips-toggle {
@@ -913,6 +844,48 @@
                 font-size: 0.7rem;
             }
         }
+
+        /* New big scan button */
+        .big-scan-button {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            background: var(--action-orange);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* Manual input toggle */
+        .manual-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 30;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -927,217 +900,227 @@
     </header>
 
     <div class="container">
-        <div class="dashboard">
-            <div class="card" id="import-section">
-                <div class="card-header">
-                    <div class="card-icon">
-                        <i class="fas fa-upload"></i>
-                    </div>
-                    <h2 class="card-title">Product Import</h2>
+        <!-- Import Section (only shown when no products) -->
+        <div class="card" id="import-section">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-upload"></i>
                 </div>
-                
-                <div class="import-guide">
-                    <h3><i class="fas fa-info-circle"></i> Import Guide</h3>
-                    <ol>
-                        <li>Download the template using the button below</li>
-                        <li>Fill in your product information</li>
-                        <li>Save the file and upload it here</li>
-                        <li>Ensure columns are in order: Barcode, Item No, Description</li>
-                        <li>Barcodes must be 8-14 digits</li>
-                    </ol>
-                    <a href="#" class="download-template" id="download-template">
-                        <i class="fas fa-download"></i> Download Template
-                    </a>
+                <h2 class="card-title">Product Import</h2>
+            </div>
+            
+            <div class="import-guide">
+                <h3><i class="fas fa-info-circle"></i> Import Guide</h3>
+                <ol>
+                    <li>Download the template using the button below</li>
+                    <li>Fill in your product information</li>
+                    <li>Save the file and upload it here</li>
+                    <li>Ensure columns are in order: Barcode, Item No, Description</li>
+                    <li>Barcodes must be 8-14 digits</li>
+                </ol>
+                <a href="#" class="download-template" id="download-template">
+                    <i class="fas fa-download"></i> Download Template
+                </a>
+            </div>
+            
+            <div class="file-input-container">
+                <label for="excel-import" class="file-input-label btn btn-block">
+                    <i class="fas fa-file-excel"></i> Select Excel File
+                </label>
+                <input type="file" id="excel-import" class="file-input" accept=".xlsx, .xls">
+            </div>
+            
+            <div class="status-grid">
+                <div class="status-card">
+                    <div class="status-count" id="product-count">0</div>
+                    <div class="status-label">Products Imported</div>
                 </div>
-                
-                <div class="file-input-container">
-                    <label for="excel-import" class="file-input-label">
-                        <i class="fas fa-file-excel"></i> Select Excel File
-                    </label>
-                    <input type="file" id="excel-import" class="file-input" accept=".xlsx, .xls">
+                <div class="status-card">
+                    <div class="status-count" id="pending-count">0</div>
+                    <div class="status-label">Pending Scans</div>
                 </div>
-                
-                <div class="status-grid">
-                    <div class="status-card">
-                        <div class="status-count" id="product-count">0</div>
-                        <div class="status-label">Products Imported</div>
-                    </div>
-                    <div class="status-card">
-                        <div class="status-count" id="pending-count">0</div>
-                        <div class="status-label">Pending Scans</div>
-                    </div>
-                    <div class="status-card">
-                        <div class="status-count" id="completed-count">0</div>
-                        <div class="status-label">Completed Scans</div>
-                    </div>
-                </div>
-                
-                <div class="scan-focus">
-                    <h3><i class="fas fa-camera"></i> Scanning Mode</h3>
-                    <p>After importing your product data, the system will automatically switch to scanning mode.</p>
+                <div class="status-card">
+                    <div class="status-count" id="completed-count">0</div>
+                    <div class="status-label">Completed Scans</div>
                 </div>
             </div>
             
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-icon">
-                        <i class="fas fa-qrcode"></i>
-                    </div>
-                    <h2 class="card-title">Barcode Scanning</h2>
+            <div class="scan-focus">
+                <h3><i class="fas fa-camera"></i> Scanning Mode</h3>
+                <p>After importing your product data, the system will automatically switch to scanning mode.</p>
+            </div>
+        </div>
+        
+        <!-- Scanning Section -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-qrcode"></i>
                 </div>
-                
-                <p>Scan product barcodes using your device camera or enter manually.</p>
-                
-                <div class="scanner-container">
-                    <div id="scanner-viewport">
-                        <video id="camera-preview" autoplay playsinline></video>
-                        <div class="scanner-overlay">
-                            <div class="scanner-frame">
-                                <div class="scanner-laser"></div>
-                            </div>
-                        </div>
-                        <!-- Scanner feedback overlay -->
-                        <div class="scan-success" id="scan-success">
-                            <i class="fas fa-check-circle scan-success-icon"></i>
+                <h2 class="card-title">Barcode Scanning</h2>
+            </div>
+            
+            <p>Scan product barcodes using your device camera</p>
+            
+            <div class="scanner-container">
+                <div id="scanner-viewport">
+                    <video id="camera-preview" autoplay playsinline></video>
+                    <div class="scanner-overlay">
+                        <div class="scanner-frame">
+                            <div class="scanner-laser"></div>
                         </div>
                     </div>
-                    
-                    <div class="camera-status" id="camera-status">
-                        <i class="fas fa-info-circle"></i> Camera not active. Click "Start Camera" to begin scanning.
+                    <!-- Scanner feedback overlay -->
+                    <div class="scan-success" id="scan-success">
+                        <i class="fas fa-check-circle scan-success-icon"></i>
                     </div>
-                    
-                    <div class="scanner-controls">
-                        <button class="btn btn-scan" id="start-camera">
-                            <i class="fas fa-camera"></i> Start Camera
-                        </button>
-                        <button class="btn btn-danger" id="stop-camera" disabled>
-                            <i class="fas fa-stop"></i> Stop Camera
-                        </button>
-                    </div>
-                    
-                    <div class="manual-input">
-                        <input type="text" id="manual-barcode" placeholder="Enter barcode manually">
-                        <button class="btn btn-secondary" id="manual-submit">
-                            <i class="fas fa-arrow-right"></i> Submit
-                        </button>
-                    </div>
-                    
-                    <div class="scan-tips" id="scanning-tips">
-                        <h4><i class="fas fa-lightbulb"></i> Scanning Tips</h4>
-                        <ul>
-                            <li><i class="fas fa-check-circle"></i> Ensure barcode is within the scanning frame</li>
-                            <li><i class="fas fa-check-circle"></i> Hold device steady with good lighting</li>
-                            <li><i class="fas fa-check-circle"></i> Avoid glare on barcode surface</li>
-                            <li><i class="fas fa-check-circle"></i> Try manual entry if scanning fails</li>
-                        </ul>
-                    </div>
-                    
-                    <!-- Toggle button for tips -->
-                    <button class="tips-toggle" id="tips-toggle">
-                        <i class="fas fa-question"></i>
+                    <!-- Manual toggle button -->
+                    <button class="manual-toggle" id="manual-toggle">
+                        <i class="fas fa-keyboard"></i>
                     </button>
                 </div>
                 
-                <!-- Existing Product Form -->
-                <div class="expiry-form" id="expiry-form">
-                    <div class="product-details">
-                        <div class="detail-row">
-                            <div class="detail-label">Barcode:</div>
-                            <div class="detail-value" id="form-barcode">-</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Item No:</div>
-                            <div class="detail-value" id="form-itemno">-</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Description:</div>
-                            <div class="detail-value" id="form-description">-</div>
-                        </div>
+                <div class="camera-status" id="camera-status">
+                    <i class="fas fa-info-circle"></i> Camera not active. Click "Start Camera" to begin scanning.
+                </div>
+                
+                <div class="scanner-controls">
+                    <button class="btn btn-scan" id="start-camera">
+                        <i class="fas fa-camera"></i> Start Camera
+                    </button>
+                    <button class="btn btn-danger" id="stop-camera" disabled>
+                        <i class="fas fa-stop"></i> Stop Camera
+                    </button>
+                </div>
+                
+                <div class="manual-input" id="manual-input" style="display: none;">
+                    <input type="text" id="manual-barcode" placeholder="Enter barcode manually">
+                    <button class="btn btn-secondary" id="manual-submit">
+                        <i class="fas fa-arrow-right"></i> Submit
+                    </button>
+                </div>
+                
+                <div class="scan-tips" id="scanning-tips">
+                    <h4><i class="fas fa-lightbulb"></i> Scanning Tips</h4>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Ensure barcode is within the scanning frame</li>
+                        <li><i class="fas fa-check-circle"></i> Hold device steady with good lighting</li>
+                        <li><i class="fas fa-check-circle"></i> Avoid glare on barcode surface</li>
+                        <li><i class="fas fa-check-circle"></i> Try manual entry if scanning fails</li>
+                    </ul>
+                </div>
+                
+                <!-- Toggle button for tips -->
+                <button class="tips-toggle" id="tips-toggle">
+                    <i class="fas fa-question"></i>
+                </button>
+            </div>
+            
+            <!-- Existing Product Form -->
+            <div class="expiry-form" id="expiry-form">
+                <div class="product-details">
+                    <div class="detail-row">
+                        <div class="detail-label">Barcode:</div>
+                        <div class="detail-value" id="form-barcode">-</div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="batch-number"><i class="fas fa-hashtag"></i> Batch Number</label>
-                        <input type="text" id="batch-number" placeholder="Enter batch number (4-12 characters)">
-                        <div class="duplicate-warning" id="duplicate-warning">
-                            <i class="fas fa-exclamation-triangle"></i> Batch with same expiry already exists! Quantity will be merged.
-                        </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Item No:</div>
+                        <div class="detail-value" id="form-itemno">-</div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="quantity"><i class="fas fa-cubes"></i> Quantity</label>
-                        <input type="number" id="quantity" min="1" value="1">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="expiry-date"><i class="fas fa-calendar-day"></i> Expiry Date</label>
-                        <div class="date-input-container">
-                            <input type="date" id="expiry-date" required>
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button class="btn btn-danger" id="cancel-form">
-                            <i class="fas fa-times"></i> Cancel
-                        </button>
-                        <button class="btn btn-export" id="save-form">
-                            <i class="fas fa-save"></i> Save Record
-                        </button>
+                    <div class="detail-row">
+                        <div class="detail-label">Description:</div>
+                        <div class="detail-value" id="form-description">-</div>
                     </div>
                 </div>
                 
-                <!-- New Product Form -->
-                <div class="expiry-form new-product-form" id="new-product-form" style="display: none;">
-                    <div class="new-product-notice">
-                        <h3><i class="fas fa-exclamation-circle"></i> Product Not Found</h3>
-                        <p>This barcode is not in the database. Please add product details below.</p>
+                <div class="form-group">
+                    <label for="batch-number"><i class="fas fa-hashtag"></i> Batch Number</label>
+                    <input type="text" id="batch-number" placeholder="Enter batch number (4-12 characters)">
+                    <div class="duplicate-warning" id="duplicate-warning">
+                        <i class="fas fa-exclamation-triangle"></i> Batch with same expiry already exists! Quantity will be merged.
                     </div>
-                    
-                    <div class="detail-row">
-                        <div class="detail-label">Scanned Barcode:</div>
-                        <div class="detail-value" id="new-form-barcode">-</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quantity"><i class="fas fa-cubes"></i> Quantity</label>
+                    <input type="number" id="quantity" min="1" value="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="expiry-date"><i class="fas fa-calendar-day"></i> Expiry Date</label>
+                    <div class="date-input-container">
+                        <input type="date" id="expiry-date" required>
+                        <i class="fas fa-calendar-alt"></i>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="new-itemno"><i class="fas fa-hashtag"></i> Item Number</label>
-                        <input type="text" id="new-itemno" placeholder="Enter item number">
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-danger" id="cancel-form">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button class="btn btn-export" id="save-form">
+                        <i class="fas fa-save"></i> Save Record
+                    </button>
+                </div>
+            </div>
+            
+            <!-- New Product Form -->
+            <div class="expiry-form new-product-form" id="new-product-form" style="display: none;">
+                <div class="new-product-notice">
+                    <h3><i class="fas fa-exclamation-circle"></i> Product Not Found</h3>
+                    <p>This barcode is not in the database. Please add product details below.</p>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Scanned Barcode:</div>
+                    <div class="detail-value" id="new-form-barcode">-</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="new-itemno"><i class="fas fa-hashtag"></i> Item Number</label>
+                    <input type="text" id="new-itemno" placeholder="Enter item number">
+                </div>
+                
+                <div class="form-group">
+                    <label for="new-description"><i class="fas fa-align-left"></i> Description</label>
+                    <input type="text" id="new-description" placeholder="Enter product description">
+                </div>
+                
+                <div class="form-group">
+                    <label for="new-batch-number"><i class="fas fa-hashtag"></i> Batch Number</label>
+                    <input type="text" id="new-batch-number" placeholder="Enter batch number (4-12 characters)">
+                </div>
+                
+                <div class="form-group">
+                    <label for="new-quantity"><i class="fas fa-cubes"></i> Quantity</label>
+                    <input type="number" id="new-quantity" min="1" value="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="new-expiry-date"><i class="fas fa-calendar-day"></i> Expiry Date</label>
+                    <div class="date-input-container">
+                        <input type="date" id="new-expiry-date" required>
+                        <i class="fas fa-calendar-alt"></i>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="new-description"><i class="fas fa-align-left"></i> Description</label>
-                        <input type="text" id="new-description" placeholder="Enter product description">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="new-batch-number"><i class="fas fa-hashtag"></i> Batch Number</label>
-                        <input type="text" id="new-batch-number" placeholder="Enter batch number (4-12 characters)">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="new-quantity"><i class="fas fa-cubes"></i> Quantity</label>
-                        <input type="number" id="new-quantity" min="1" value="1">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="new-expiry-date"><i class="fas fa-calendar-day"></i> Expiry Date</label>
-                        <div class="date-input-container">
-                            <input type="date" id="new-expiry-date" required>
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button class="btn btn-danger" id="cancel-new-form">
-                            <i class="fas fa-times"></i> Cancel
-                        </button>
-                        <button class="btn btn-export" id="save-new-form">
-                            <i class="fas fa-plus-circle"></i> Add Product & Record
-                        </button>
-                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-danger" id="cancel-new-form">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button class="btn btn-export" id="save-new-form">
+                        <i class="fas fa-plus-circle"></i> Add Product & Record
+                    </button>
                 </div>
             </div>
         </div>
         
+        <!-- Big Scan Button (Datalogic-style) -->
+        <button class="big-scan-button" id="big-scan-button">
+            <i class="fas fa-camera"></i> SCAN PRODUCT
+        </button>
+        
+        <!-- Records Section -->
         <div class="card">
             <div class="tabs">
                 <div class="tab active" data-tab="expiry">Expiry Records</div>
@@ -1191,7 +1174,7 @@
                         </select>
                     </div>
                     
-                    <button class="btn btn-export" id="export-btn">
+                    <button class="btn btn-export btn-block" id="export-btn">
                         <i class="fas fa-file-export"></i> Export to Excel
                     </button>
                 </div>
@@ -1204,7 +1187,7 @@
                 <div class="import-guide">
                     <h4>Upload New Product Data</h4>
                     <div class="file-input-container">
-                        <label for="new-excel-import" class="file-input-label">
+                        <label for="new-excel-import" class="file-input-label btn btn-block">
                             <i class="fas fa-file-excel"></i> Select New Excel File
                         </label>
                         <input type="file" id="new-excel-import" class="file-input" accept=".xlsx, .xls">
@@ -1671,6 +1654,16 @@
                     if (e.key === 'Enter') this.processManualInput();
                 });
                 
+                // Big scan button
+                document.getElementById('big-scan-button').addEventListener('click', () => {
+                    if (!this.isScanning) {
+                        this.startCamera();
+                    }
+                });
+                
+                // Manual toggle button
+                document.getElementById('manual-toggle').addEventListener('click', this.toggleManualInput.bind(this));
+                
                 // Form handling
                 document.getElementById('cancel-form').addEventListener('click', this.hideForm.bind(this));
                 document.getElementById('save-form').addEventListener('click', this.saveExpiryRecord.bind(this));
@@ -1706,6 +1699,17 @@
                 setTimeout(() => {
                     this.hideTips();
                 }, 10000);
+            },
+            
+            toggleManualInput() {
+                const manualInput = document.getElementById('manual-input');
+                if (manualInput.style.display === 'none') {
+                    manualInput.style.display = 'flex';
+                    document.getElementById('manual-barcode').focus();
+                    this.stopCamera();
+                } else {
+                    manualInput.style.display = 'none';
+                }
             },
             
             toggleTips() {
@@ -1776,8 +1780,9 @@
                     document.getElementById('stop-camera').disabled = false;
                     document.getElementById('camera-status').innerHTML = 
                         '<i class="fas fa-check-circle"></i> Camera active. Scan a barcode...';
-                    document.getElementById('camera-status').style.background = '#e3f9ee';
-                    document.getElementById('camera-status').style.color = '#237f52';
+                    document.getElementById('camera-status').style.background = 'rgba(0, 204, 102, 0.1)';
+                    document.getElementById('camera-status').style.color = '#00cc66';
+                    document.getElementById('manual-input').style.display = 'none';
                     
                     storage.showNotification('Camera started. Scanning for barcodes...', 'success');
                     
@@ -1877,8 +1882,8 @@
                     document.getElementById('stop-camera').disabled = true;
                     document.getElementById('camera-status').innerHTML = 
                         '<i class="fas fa-info-circle"></i> Camera not active.';
-                    document.getElementById('camera-status').style.background = '#f0f2f5';
-                    document.getElementById('camera-status').style.color = 'inherit';
+                    document.getElementById('camera-status').style.background = '';
+                    document.getElementById('camera-status').style.color = '';
                     
                     // Only show notification if it's an explicit stop
                     if (explicitStop) {
