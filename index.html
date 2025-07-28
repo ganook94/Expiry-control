@@ -1660,6 +1660,7 @@
             lastScannedCode: null,
             lastScanTime: 0,
             scanTimeout: null,
+            formActive: false,
 
             init() {
                 // Event listeners
@@ -1726,7 +1727,7 @@
             },
             
             async startCamera() {
-                if (this.isScanning) return;
+                if (this.isScanning || this.formActive) return;
                 
                 // Set continuous scanning flag
                 this.continuousScanning = true;
@@ -1875,7 +1876,7 @@
                     // Update UI
                     document.getElementById('stop-camera').disabled = true;
                     document.getElementById('camera-status').innerHTML = 
-                        '<i class="fas fa-info-circle"></i> Camera not active. Click "Start Camera" to begin scanning.';
+                        '<i class="fas fa-info-circle"></i> Camera not active.';
                     document.getElementById('camera-status').style.background = '#f0f2f5';
                     document.getElementById('camera-status').style.color = 'inherit';
                     
@@ -1891,7 +1892,7 @@
             },
             
             onBarcodeDetected(result) {
-                if (!this.isScanning) return;
+                if (!this.isScanning || this.formActive) return;
                 
                 const code = result.codeResult.code;
                 const now = Date.now();
@@ -1930,7 +1931,7 @@
                 const barcodeInput = document.getElementById('manual-barcode');
                 const barcode = barcodeInput.value.trim();
                 
-                if (!barcode) return;
+                if (!barcode || this.formActive) return;
                 
                 // Stop scanning if it was running
                 if (this.isScanning) {
@@ -1963,6 +1964,8 @@
             },
             
             showExpiryForm(product) {
+                this.formActive = true;
+                
                 // Hide new product form
                 this.hideNewProductForm();
                 
@@ -1995,6 +1998,8 @@
             },
             
             showNewProductForm(barcode) {
+                this.formActive = true;
+                
                 // Hide existing product form
                 this.hideForm();
                 
@@ -2069,6 +2074,7 @@
             },
             
             hideForm() {
+                this.formActive = false;
                 document.getElementById('expiry-form').style.display = 'none';
                 storage.currentProduct = null;
                 this.currentRecordIndex = null;
@@ -2082,6 +2088,7 @@
             },
             
             hideNewProductForm() {
+                this.formActive = false;
                 document.getElementById('new-product-form').style.display = 'none';
                 
                 // Restart scanning if continuous scanning was enabled
