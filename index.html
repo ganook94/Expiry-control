@@ -1283,6 +1283,18 @@
                     }
                     return record;
                 });
+                
+                // Initialize with sample data
+                if (this.products.length === 0) {
+                    this.products = [
+                        {barcode: "123456789012", itemNo: "CF-1001", description: "Carrefour Olive Oil"},
+                        {barcode: "234567890123", itemNo: "CF-1002", description: "Carrefour Whole Wheat Pasta"},
+                        {barcode: "345678901234", itemNo: "CF-1003", description: "Carrefour Tomato Ketchup"},
+                        {barcode: "456789012345", itemNo: "CF-1004", description: "Carrefour Basmati Rice"},
+                        {barcode: "567890123456", itemNo: "CF-1005", description: "Carrefour Chocolate Cookies"}
+                    ];
+                    this.saveProducts();
+                }
             },
             
             saveProducts() {
@@ -1893,7 +1905,7 @@
                 this.lastScannedCode = code;
                 this.lastScanTime = now;
                 
-                // Stop scanning (without explicit stop)
+                // Stop scanning immediately
                 this.stopCamera();
                 
                 // Give visual feedback
@@ -1920,10 +1932,8 @@
                 
                 if (!barcode) return;
                 
-                // Stop scanning temporarily if it was running
-                const wasScanning = this.isScanning;
-                if (wasScanning) {
-                    // Stop without explicit stop to preserve continuous scanning
+                // Stop scanning if it was running
+                if (this.isScanning) {
                     this.stopCamera();
                 }
                 
@@ -1933,7 +1943,6 @@
                 }, 500);
                 
                 barcodeInput.value = '';
-                barcodeInput.focus(); // Return focus to input field
             },
             
             processBarcode(barcode) {
@@ -2066,7 +2075,9 @@
                 
                 // Restart scanning if continuous scanning was enabled
                 if (this.continuousScanning) {
-                    this.startCamera();
+                    setTimeout(() => {
+                        this.startCamera();
+                    }, 500);
                 }
             },
             
@@ -2075,7 +2086,9 @@
                 
                 // Restart scanning if continuous scanning was enabled
                 if (this.continuousScanning) {
-                    this.startCamera();
+                    setTimeout(() => {
+                        this.startCamera();
+                    }, 500);
                 }
             },
             
@@ -2128,13 +2141,6 @@
                 
                 // Hide form
                 this.hideForm();
-                
-                // Restart camera automatically
-                if (this.continuousScanning) {
-                    setTimeout(() => {
-                        this.startCamera();
-                    }, 500);
-                }
             },
             
             saveNewProductAndRecord() {
@@ -2197,13 +2203,6 @@
                 
                 // Hide form
                 this.hideNewProductForm();
-                
-                // Restart camera automatically
-                if (this.continuousScanning) {
-                    setTimeout(() => {
-                        this.startCamera();
-                    }, 500);
-                }
             }
         };
         
