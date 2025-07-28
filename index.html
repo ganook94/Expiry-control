@@ -95,11 +95,6 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-        }
 
         .card-header {
             display: flex;
@@ -142,11 +137,6 @@
             padding: 15px;
             text-align: center;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s ease;
-        }
-        
-        .status-card:hover {
-            transform: translateY(-3px);
         }
 
         .status-count {
@@ -179,11 +169,6 @@
             transition: all 0.3s;
             box-shadow: 0 3px 6px rgba(38, 127, 82, 0.3);
             font-size: 0.95rem;
-        }
-        
-        .file-input-label:hover {
-            background: #1d6c45;
-            transform: scale(1.05);
         }
 
         .scanner-container {
@@ -271,11 +256,6 @@
             min-width: 120px;
             justify-content: center;
         }
-        
-        .btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
 
         .btn:disabled {
             opacity: 0.6;
@@ -286,36 +266,20 @@
             background: var(--action-orange);
             color: white;
         }
-        
-        .btn-scan:hover:not(:disabled) {
-            background: #e56a1f;
-        }
 
         .btn-export {
             background: var(--confirm-green);
             color: white;
-        }
-        
-        .btn-export:hover:not(:disabled) {
-            background: #1d6c45;
         }
 
         .btn-secondary {
             background: var(--primary-blue);
             color: white;
         }
-        
-        .btn-secondary:hover:not(:disabled) {
-            background: #002a62;
-        }
 
         .btn-danger {
             background: var(--alert-red);
             color: white;
-        }
-        
-        .btn-danger:hover:not(:disabled) {
-            background: #a61a0e;
         }
 
         .manual-input {
@@ -331,13 +295,6 @@
             border-radius: 50px;
             font-size: 16px;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-            transition: border-color 0.3s;
-        }
-        
-        .manual-input input:focus {
-            border-color: var(--primary-blue);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(0, 56, 123, 0.2);
         }
 
         .expiry-form {
@@ -368,13 +325,6 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        .form-group input:focus {
-            border-color: var(--primary-blue);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(0, 56, 123, 0.2);
         }
         
         /* Calendar icon */
@@ -456,18 +406,10 @@
             font-size: 0.9rem;
             white-space: nowrap;
         }
-        
-        .tab:hover {
-            background: #e1e4e8;
-        }
 
         .tab.active {
             background: var(--primary-blue);
             color: white;
-        }
-        
-        .tab.active:hover {
-            background: #002a62;
         }
 
         .tab-content {
@@ -507,21 +449,6 @@
             font-size: 0.8rem;
             font-weight: 600;
         }
-        
-        .expired {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        
-        .expiring-soon {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-        
-        .expiry-normal {
-            background-color: #d4edda;
-            color: #155724;
-        }
 
         .action-cell {
             display: flex;
@@ -536,13 +463,6 @@
             cursor: pointer;
             transition: all 0.2s;
             white-space: nowrap;
-            border: 1px solid #ddd;
-            background: #f8f9fa;
-        }
-        
-        .action-btn:hover {
-            background: #e9ecef;
-            transform: translateY(-1px);
         }
 
         .footer {
@@ -621,13 +541,6 @@
             font-weight: 600;
             margin-top: 8px;
             font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-        
-        .download-template:hover {
-            background: #002a62;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
         .scan-focus {
@@ -757,14 +670,8 @@
             z-index: 20;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             font-size: 0.9rem;
-            transition: all 0.3s;
         }
         
-        .tips-toggle:hover {
-            transform: scale(1.1);
-            background: #002a62;
-        }
-
         /* Mobile menu toggle */
         .mobile-menu-toggle {
             display: none;
@@ -773,69 +680,6 @@
             color: white;
             font-size: 1.5rem;
             margin-left: 10px;
-        }
-        
-        /* Mobile navigation menu */
-        .mobile-nav {
-            position: fixed;
-            top: 0;
-            right: -300px;
-            width: 280px;
-            height: 100%;
-            background: white;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-            z-index: 2000;
-            transition: right 0.3s ease;
-            padding-top: 60px;
-            overflow-y: auto;
-        }
-        
-        .mobile-nav.active {
-            right: 0;
-        }
-        
-        .mobile-nav-item {
-            padding: 15px 20px;
-            border-bottom: 1px solid #eee;
-            display: block;
-            color: var(--text-dark);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .mobile-nav-item i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-        
-        .mobile-nav-item:hover {
-            background: #f0f2f5;
-        }
-        
-        .mobile-nav-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 1.5rem;
-            background: none;
-            border: none;
-            color: var(--primary-blue);
-        }
-        
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1999;
-            display: none;
-        }
-        
-        .overlay.active {
-            display: block;
         }
 
         /* Mobile specific adjustments */
@@ -963,15 +807,6 @@
             .detail-label, .detail-value {
                 min-width: 100%;
             }
-            
-            /* Table container for mobile */
-            .table-container {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                margin: 0 -15px;
-                padding: 0 15px;
-                width: calc(100% + 30px);
-            }
         }
 
         @media (max-width: 480px) {
@@ -1018,34 +853,10 @@
             <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiPjxyZWN0IHdpZHRoPSIyNDAiIGhlaWdodD0iODAiIGZpbGw9IiMwMDM4N2IiLz48cGF0aCBkPSJNNTAgMjAgTDIwIDUwIEw1MCA4MCBMMTAgODAgTDEwIDIwIFoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNjAgMjAgTDkwIDUwIEw2MCA4MCBMMTAwIDgwIEwxMDAgMjAgWiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik03MCAyMCBMMTIwIDUwIEw3MCA4MCBMMTkwIDgwIEwxOTAgMjAgWiIgZmlsbD0iI2ZmZiIvPjx0ZXh0IHg9IjEyMCIgeT0iNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyMCIgZmlsbD0iI2ZmZiI+UGFraXN0YW48L3RleHQ+PC9zdmc+" alt="Carrefour Pakistan" class="logo">
             <h1 class="header-title">Expiry Control System</h1>
         </div>
-        <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+        <button class="mobile-menu-toggle">
             <i class="fas fa-bars"></i>
         </button>
     </header>
-    
-    <!-- Mobile Navigation Menu -->
-    <div class="mobile-nav" id="mobile-nav">
-        <button class="mobile-nav-close" id="mobile-nav-close">
-            <i class="fas fa-times"></i>
-        </button>
-        <a href="#" class="mobile-nav-item" data-tab="import-section">
-            <i class="fas fa-upload"></i> Product Import
-        </a>
-        <a href="#" class="mobile-nav-item" data-tab="scanner-section">
-            <i class="fas fa-qrcode"></i> Barcode Scanning
-        </a>
-        <a href="#" class="mobile-nav-item" data-tab="expiry-tab">
-            <i class="fas fa-list"></i> Expiry Records
-        </a>
-        <a href="#" class="mobile-nav-item" data-tab="export-tab">
-            <i class="fas fa-file-export"></i> Export Data
-        </a>
-        <a href="#" class="mobile-nav-item" data-tab="manage-tab">
-            <i class="fas fa-cog"></i> Manage Data
-        </a>
-    </div>
-    
-    <div class="overlay" id="overlay"></div>
 
     <div class="container">
         <div class="dashboard">
@@ -1099,7 +910,7 @@
                 </div>
             </div>
             
-            <div class="card" id="scanner-section">
+            <div class="card">
                 <div class="card-header">
                     <div class="card-icon">
                         <i class="fas fa-qrcode"></i>
@@ -1432,8 +1243,8 @@
                 const container = document.getElementById('expiry-body');
                 
                 if (this.expiryRecords.length === 0) {
-                    container.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px;">
-                        <i class="fas fa-file-medical" style="font-size: 2rem; color: #ccc; margin-bottom: 10px;"></i>
+                    container.innerHTML = `<tr><td colspan="7" class="empty-state">
+                        <i class="fas fa-file-medical"></i>
                         <p>No expiry records yet. Scan products to add records.</p>
                     </td></tr>`;
                     return;
@@ -1888,7 +1699,7 @@
                 });
             },
             
-            stopCamera() {
+            stopCamera(explicitStop = false) {
                 if (!this.isScanning) return;
                 
                 try {
@@ -1904,7 +1715,11 @@
                     }
                     
                     this.isScanning = false;
-                    this.continuousScanning = false;
+                    
+                    // Only set continuousScanning to false if it's an explicit stop
+                    if (explicitStop) {
+                        this.continuousScanning = false;
+                    }
                     
                     // Update UI
                     document.getElementById('stop-camera').disabled = true;
@@ -1913,7 +1728,10 @@
                     document.getElementById('camera-status').style.background = '#f0f2f5';
                     document.getElementById('camera-status').style.color = 'inherit';
                     
-                    storage.showNotification('Camera stopped.', 'error');
+                    // Only show notification if it's an explicit stop
+                    if (explicitStop) {
+                        storage.showNotification('Camera stopped.', 'error');
+                    }
                     
                 } catch (error) {
                     console.error("Error stopping camera:", error);
@@ -1936,7 +1754,7 @@
                 this.lastScannedCode = code;
                 this.lastScanTime = now;
                 
-                // Stop scanning
+                // Stop scanning (without explicit stop)
                 this.stopCamera();
                 
                 // Give visual feedback
@@ -1966,6 +1784,7 @@
                 // Stop scanning temporarily if it was running
                 const wasScanning = this.isScanning;
                 if (wasScanning) {
+                    // Stop without explicit stop to preserve continuous scanning
                     this.stopCamera();
                 }
                 
@@ -2146,6 +1965,13 @@
                 
                 // Hide form
                 this.hideForm();
+                
+                // Restart camera automatically
+                if (this.continuousScanning) {
+                    setTimeout(() => {
+                        this.startCamera();
+                    }, 500);
+                }
             }
         };
         
@@ -2260,53 +2086,6 @@
             }
         };
         
-        // Mobile Navigation
-        const mobileNav = {
-            init() {
-                const toggle = document.getElementById('mobile-menu-toggle');
-                const nav = document.getElementById('mobile-nav');
-                const close = document.getElementById('mobile-nav-close');
-                const overlay = document.getElementById('overlay');
-                const navItems = document.querySelectorAll('.mobile-nav-item');
-                
-                toggle.addEventListener('click', () => {
-                    nav.classList.add('active');
-                    overlay.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                });
-                
-                close.addEventListener('click', () => {
-                    nav.classList.remove('active');
-                    overlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                });
-                
-                overlay.addEventListener('click', () => {
-                    nav.classList.remove('active');
-                    overlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                });
-                
-                navItems.forEach(item => {
-                    item.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const targetId = item.dataset.tab;
-                        const targetElement = document.getElementById(targetId);
-                        
-                        // Hide mobile nav
-                        nav.classList.remove('active');
-                        overlay.classList.remove('active');
-                        document.body.style.overflow = '';
-                        
-                        // Scroll to target section
-                        if (targetElement) {
-                            targetElement.scrollIntoView({ behavior: 'smooth' });
-                        }
-                    });
-                });
-            }
-        };
-        
         // Initialize the application
         function initApp() {
             if (!checkBrowserCompatibility()) return;
@@ -2316,7 +2095,6 @@
             scannerManager.init();
             exportManager.init();
             dataManager.init();
-            mobileNav.init();
             storage.updateUI();
         }
         
