@@ -739,8 +739,101 @@
             margin-bottom: 10px;
         }
 
-        /* Mobile specific adjustments */
+        /* New styles for enhanced scanning UI */
+        .scanner-mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .scanner-mode-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: #e0e7ff;
+            border: 1px solid #00387b;
+            color: #00387b;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .scanner-mode-btn.active {
+            background: #00387b;
+            color: white;
+        }
+        
+        .scanner-resolution {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .scanner-resolution label {
+            font-size: 0.9rem;
+        }
+        
+        .scanner-resolution select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: white;
+        }
+        
+        .format-support {
+            background: #f0f8ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid #00387b;
+        }
+        
+        .format-support h4 {
+            color: #00387b;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .format-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .format-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #c2d9ff;
+        }
+        
+        .format-item i {
+            color: #237f52;
+        }
+        
+        /* Responsive adjustments */
         @media (max-width: 767px) {
+            .scanner-mode-selector {
+                flex-direction: column;
+            }
+            
+            .scanner-mode-btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .format-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
             header {
                 padding: 0.7rem 0.8rem;
             }
@@ -988,6 +1081,14 @@
                 
                 <p>Scan product barcodes using your device camera or enter manually.</p>
                 
+                <!-- Scanner mode selector -->
+                <div class="scanner-mode-selector">
+                    <div class="scanner-mode-btn active" data-mode="all">All Formats</div>
+                    <div class="scanner-mode-btn" data-mode="1d">1D Barcodes</div>
+                    <div class="scanner-mode-btn" data-mode="2d">QR Codes</div>
+                    <div class="scanner-mode-btn" data-mode="retail">Retail Formats</div>
+                </div>
+                
                 <div class="scanner-container">
                     <div id="scanner-viewport">
                         <video id="camera-preview" autoplay playsinline></video>
@@ -1002,6 +1103,16 @@
                         </div>
                     </div>
                     
+                    <div class="scanner-resolution">
+                        <label for="camera-resolution"><i class="fas fa-camera"></i> Camera Quality:</label>
+                        <select id="camera-resolution">
+                            <option value="auto">Auto</option>
+                            <option value="hd">HD (720p)</option>
+                            <option value="full-hd">Full HD (1080p)</option>
+                            <option value="ultra-hd">Ultra HD (4K)</option>
+                        </select>
+                    </div>
+                    
                     <div class="camera-status" id="camera-status">
                         <i class="fas fa-info-circle"></i> Camera not active. Click "Start Camera" to begin scanning.
                     </div>
@@ -1013,6 +1124,9 @@
                         <button class="btn btn-danger" id="stop-camera" disabled>
                             <i class="fas fa-stop"></i> Stop Camera
                         </button>
+                        <button class="btn btn-secondary" id="toggle-flash">
+                            <i class="fas fa-lightbulb"></i> Flash
+                        </button>
                     </div>
                     
                     <div class="manual-input">
@@ -1022,6 +1136,22 @@
                         </button>
                     </div>
                     
+                    <div class="format-support">
+                        <h4><i class="fas fa-barcode"></i> Supported Formats</h4>
+                        <div class="format-grid">
+                            <div class="format-item"><i class="fas fa-check-circle"></i> UPC-A</div>
+                            <div class="format-item"><i class="fas fa-check-circle"></i> UPC-E</div>
+                            <div class="format-item"><i class="fas fa-check-circle"></i> EAN-13</div>
+                            <div class="format-item"><i class="fas fa-check-circle"></i> EAN-8</div>
+                            <div class="format-item"><i class="fas fa-check-circle"></i> Code 39</div>
+                            <div class="format-item"><i class="fas fa-check-circle"></i> Code 128</div>
+                            <div class="format-item"><i class="fas fa-check-circle"></i> Code 93</div>
+                            <div class="format-item"><i class="fas fa-check-circle"></i> ITF (Interleaved 2 of 5)</div>
+                            <div class="format-item"><i class="fas fa-check-circle"></i> QR Code</div>
+                            <div class="format-item"><i class="fas fa-check-circle"></i> Data Matrix</div>
+                        </div>
+                    </div>
+                    
                     <div class="scan-tips" id="scanning-tips">
                         <h4><i class="fas fa-lightbulb"></i> Scanning Tips</h4>
                         <ul>
@@ -1029,6 +1159,8 @@
                             <li><i class="fas fa-check-circle"></i> Hold device steady with good lighting</li>
                             <li><i class="fas fa-check-circle"></i> Avoid glare on barcode surface</li>
                             <li><i class="fas fa-check-circle"></i> Try manual entry if scanning fails</li>
+                            <li><i class="fas fa-check-circle"></i> Use flash in low-light conditions</li>
+                            <li><i class="fas fa-check-circle"></i> Adjust camera quality for difficult barcodes</li>
                         </ul>
                     </div>
                     
@@ -1650,7 +1782,7 @@
             }
         };
         
-        // Scanning Manager - Optimized Workflow
+        // Enhanced Scanning Manager with expanded barcode support
         const scannerManager = {
             isScanning: false,
             currentRecordIndex: null,
@@ -1661,6 +1793,7 @@
             lastScanTime: 0,
             scanTimeout: null,
             formActive: false,
+            flashOn: false,
 
             init() {
                 // Event listeners
@@ -1706,6 +1839,122 @@
                 setTimeout(() => {
                     this.hideTips();
                 }, 10000);
+                
+                // Initialize new features
+                this.initScannerModeSelector();
+                this.initFlashControl();
+                
+                // Add resolution change listener
+                document.getElementById('camera-resolution').addEventListener('change', () => {
+                    if (this.isScanning) {
+                        this.stopCamera();
+                        setTimeout(() => {
+                            this.startCamera();
+                        }, 500);
+                    }
+                });
+            },
+            
+            getReadersForMode(mode) {
+                switch(mode) {
+                    case 'all':
+                        return [
+                            "code_128_reader",
+                            "ean_reader",
+                            "ean_8_reader",
+                            "code_39_reader",
+                            "code_39_vin_reader",
+                            "codabar_reader",
+                            "upc_reader",
+                            "upc_e_reader",
+                            "i2of5_reader",
+                            "code_93_reader",
+                            "qr_code_reader"
+                        ];
+                    case '1d':
+                        return [
+                            "code_128_reader",
+                            "ean_reader",
+                            "ean_8_reader",
+                            "code_39_reader",
+                            "code_39_vin_reader",
+                            "codabar_reader",
+                            "upc_reader",
+                            "upc_e_reader",
+                            "i2of5_reader",
+                            "code_93_reader"
+                        ];
+                    case '2d':
+                        return ["qr_code_reader"];
+                    case 'retail':
+                        return [
+                            "upc_reader",
+                            "upc_e_reader",
+                            "ean_reader",
+                            "ean_8_reader",
+                            "code_128_reader"
+                        ];
+                    default:
+                        return [
+                            "code_128_reader",
+                            "ean_reader",
+                            "ean_8_reader",
+                            "code_39_reader"
+                        ];
+                }
+            },
+            
+            initScannerModeSelector() {
+                document.querySelectorAll('.scanner-mode-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        // Update active button
+                        document.querySelectorAll('.scanner-mode-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        
+                        // Restart camera if it's active
+                        if (this.isScanning) {
+                            this.stopCamera();
+                            setTimeout(() => {
+                                this.startCamera();
+                            }, 500);
+                        }
+                    });
+                });
+            },
+            
+            initFlashControl() {
+                document.getElementById('toggle-flash').addEventListener('click', async () => {
+                    if (!this.isScanning) return;
+                    
+                    try {
+                        const videoTrack = document.getElementById('camera-preview').srcObject.getVideoTracks()[0];
+                        if (!videoTrack) return;
+                        
+                        if (videoTrack.getCapabilities().torch) {
+                            await videoTrack.applyConstraints({
+                                advanced: [{torch: !this.flashOn}]
+                            });
+                            this.flashOn = !this.flashOn;
+                            
+                            // Update button UI
+                            const btn = document.getElementById('toggle-flash');
+                            if (this.flashOn) {
+                                btn.innerHTML = '<i class="fas fa-lightbulb"></i> Flash On';
+                                btn.style.backgroundColor = '#ffc107';
+                                btn.style.color = '#333';
+                            } else {
+                                btn.innerHTML = '<i class="fas fa-lightbulb"></i> Flash';
+                                btn.style.backgroundColor = '';
+                                btn.style.color = '';
+                            }
+                        } else {
+                            storage.showNotification("Flash not supported on this device", 'error');
+                        }
+                    } catch (error) {
+                        console.error("Flash toggle error:", error);
+                        storage.showNotification("Error toggling flash", 'error');
+                    }
+                });
             },
             
             toggleTips() {
@@ -1739,21 +1988,36 @@
                 }
                 
                 try {
-                    // Check if browser supports mediaDevices
-                    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                        storage.showNotification("Camera access not supported in this browser.", 'error');
-                        return;
-                    }
+                    // Get selected resolution
+                    const resolution = document.getElementById('camera-resolution').value;
                     
-                    // Get camera access
-                    const stream = await navigator.mediaDevices.getUserMedia({
+                    const constraints = {
                         video: {
-                            facingMode: "environment", // Prefer rear camera
+                            facingMode: "environment",
                             width: { min: 640, ideal: 1280 },
                             height: { min: 480, ideal: 720 }
                         },
                         audio: false
-                    });
+                    };
+                    
+                    // Apply resolution constraints
+                    switch(resolution) {
+                        case 'hd':
+                            constraints.video.width = { min: 1280, ideal: 1280 };
+                            constraints.video.height = { min: 720, ideal: 720 };
+                            break;
+                        case 'full-hd':
+                            constraints.video.width = { min: 1920, ideal: 1920 };
+                            constraints.video.height = { min: 1080, ideal: 1080 };
+                            break;
+                        case 'ultra-hd':
+                            constraints.video.width = { min: 3840, ideal: 3840 };
+                            constraints.video.height = { min: 2160, ideal: 2160 };
+                            break;
+                    }
+                    
+                    // Get camera access
+                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
                     
                     // Get video element
                     const video = document.getElementById('camera-preview');
@@ -1803,6 +2067,10 @@
             
             async initQuagga() {
                 return new Promise((resolve, reject) => {
+                    // Get current scanning mode
+                    const activeMode = document.querySelector('.scanner-mode-btn.active').dataset.mode;
+                    const readers = this.getReadersForMode(activeMode);
+                    
                     Quagga.init({
                         inputStream: {
                             name: "Live",
@@ -1810,17 +2078,12 @@
                             target: document.querySelector('#camera-preview'),
                             constraints: {
                                 facingMode: "environment",
-                                width: 640,
-                                height: 480
+                                width: { min: 640, ideal: 1280 },
+                                height: { min: 480, ideal: 720 }
                             }
                         },
                         decoder: {
-                            readers: [
-                                "code_128_reader",
-                                "ean_reader",
-                                "ean_8_reader",
-                                "code_39_reader"
-                            ],
+                            readers: readers,
                             debug: {
                                 drawBoundingBox: false,
                                 showFrequency: false,
@@ -1830,11 +2093,11 @@
                             multiple: false
                         },
                         locate: true,
-                        numOfWorkers: 2,
-                        frequency: 10,
+                        numOfWorkers: navigator.hardwareConcurrency || 4, // Use available cores
+                        frequency: 15, // Slightly faster scanning
                         locator: {
                             halfSample: true,
-                            patchSize: "medium",
+                            patchSize: "large", // Larger patch for better detection
                         }
                     }, (err) => {
                         if (err) {
@@ -1948,8 +2211,8 @@
             
             processBarcode(barcode) {
                 // Validate barcode format
-                if (!/^\d{8,14}$/.test(barcode)) {
-                    storage.showNotification("Invalid barcode format. Must be 8-14 digits.", 'error');
+                if (!/^[\w-]{3,}$/.test(barcode)) {
+                    storage.showNotification("Invalid barcode format. Please try again.", 'error');
                     return;
                 }
                 
@@ -2334,6 +2597,12 @@
             exportManager.init();
             dataManager.init();
             storage.updateUI();
+            
+            // Set default date for expiry to next month
+            const nextMonth = new Date();
+            nextMonth.setMonth(nextMonth.getMonth() + 1);
+            document.getElementById('expiry-date').value = formatDate(nextMonth);
+            document.getElementById('new-expiry-date').value = formatDate(nextMonth);
         }
         
         // Start the app when page loads
