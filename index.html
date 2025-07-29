@@ -37,7 +37,6 @@
             touch-action: manipulation;
         }
 
-        /* Datalogic-style header */
         header {
             background: var(--primary-blue);
             color: white;
@@ -114,7 +113,6 @@
             flex-shrink: 0;
         }
 
-        /* Status indicators */
         .status-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -144,7 +142,6 @@
             font-weight: 500;
         }
 
-        /* Scanner viewport - larger and more prominent */
         .scanner-container {
             margin-top: 15px;
             position: relative;
@@ -206,7 +203,6 @@
             100% { top: 0; }
         }
 
-        /* Large buttons for Datalogic style */
         .btn {
             padding: 16px 24px;
             border: none;
@@ -391,28 +387,76 @@
             display: block;
         }
 
-        /* Table styling for dark theme */
-        .product-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 12px;
+        /* Card-based expiry records */
+        .records-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .record-card {
+            background: var(--panel-bg);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid var(--border-dark);
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .record-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        .record-barcode {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        .record-itemno {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .record-body {
+            margin-bottom: 15px;
+        }
+
+        .record-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .record-label {
+            font-weight: 600;
+            min-width: 100px;
+            color: var(--text-muted);
             font-size: 0.9rem;
         }
 
-        .product-table th {
-            background: var(--primary-blue);
-            color: white;
-            padding: 12px 10px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.85rem;
+        .record-value {
+            flex: 1;
+            color: var(--text-light);
+            font-size: 0.95rem;
         }
 
-        .product-table td {
-            padding: 12px 10px;
-            border-bottom: 1px solid var(--border-dark);
-            font-size: 0.85rem;
-            color: var(--text-light);
+        .record-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-dark);
         }
 
         .expiry-badge {
@@ -438,10 +482,9 @@
             color: white;
         }
 
-        .action-cell {
+        .record-actions {
             display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .action-btn {
@@ -458,6 +501,19 @@
 
         .action-btn.delete-btn {
             background: var(--alert-red);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--border-dark);
         }
 
         /* Footer */
@@ -678,6 +734,38 @@
             font-size: 0.9rem;
         }
         
+        /* Focus indicator */
+        .focus-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 153, 0, 0.5);
+            border-radius: 2px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { width: 80%; }
+            50% { width: 90%; }
+            100% { width: 80%; }
+        }
+        
+        /* Scanner debug info */
+        .scanner-debug {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            z-index: 15;
+        }
+
         /* Mobile specific adjustments */
         @media (max-width: 767px) {
             header {
@@ -764,14 +852,8 @@
                 width: 100%;
             }
             
-            .product-table {
-                font-size: 0.8rem;
-                min-width: 700px;
-            }
-            
-            .product-table th, 
-            .product-table td {
-                padding: 8px 6px;
+            .records-grid {
+                grid-template-columns: 1fr;
             }
             
             .tabs {
@@ -968,11 +1050,16 @@
                     <div class="scanner-overlay">
                         <div class="scanner-frame">
                             <div class="scanner-laser"></div>
+                            <div class="focus-indicator"></div>
                         </div>
                     </div>
                     <!-- Scanner feedback overlay -->
                     <div class="scan-success" id="scan-success">
                         <i class="fas fa-check-circle scan-success-icon"></i>
+                    </div>
+                    <!-- Scanner debug info -->
+                    <div class="scanner-debug" id="scanner-debug">
+                        Scanning...
                     </div>
                     <!-- Manual toggle button -->
                     <button class="manual-toggle" id="manual-toggle">
@@ -1007,6 +1094,7 @@
                         <li><i class="fas fa-check-circle"></i> Hold device steady with good lighting</li>
                         <li><i class="fas fa-check-circle"></i> Avoid glare on barcode surface</li>
                         <li><i class="fas fa-check-circle"></i> Try manual entry if scanning fails</li>
+                        <li><i class="fas fa-check-circle"></i> Position barcode 6-12 inches from camera</li>
                     </ul>
                 </div>
                 
@@ -1130,23 +1218,8 @@
             
             <div class="tab-content active" id="expiry-tab">
                 <h3>Expiry Records</h3>
-                <div class="table-container">
-                    <table class="product-table" id="expiry-table">
-                        <thead>
-                            <tr>
-                                <th>Barcode</th>
-                                <th>Item No</th>
-                                <th>Batch</th>
-                                <th>Qty</th>
-                                <th>Expiry Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="expiry-body">
-                            <!-- Expiry records will be populated here -->
-                        </tbody>
-                    </table>
+                <div class="records-grid" id="expiry-records">
+                    <!-- Records will be populated here -->
                 </div>
             </div>
             
@@ -1359,8 +1432,8 @@
                 document.getElementById('pending-count').textContent = this.products.length - completedCount;
                 document.getElementById('completed-count').textContent = completedCount;
                 
-                // Update expiry table
-                this.renderExpiryTable();
+                // Update expiry records
+                this.renderExpiryRecords();
                 
                 // Hide import section if products exist
                 if (this.products.length > 0) {
@@ -1370,14 +1443,17 @@
                 }
             },
             
-            renderExpiryTable() {
-                const container = document.getElementById('expiry-body');
+            renderExpiryRecords() {
+                const container = document.getElementById('expiry-records');
                 
                 if (this.expiryRecords.length === 0) {
-                    container.innerHTML = `<tr><td colspan="7" class="empty-state">
-                        <i class="fas fa-file-medical"></i>
-                        <p>No expiry records yet. Scan products to add records.</p>
-                    </td></tr>`;
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-file-medical"></i>
+                            <h3>No Expiry Records Found</h3>
+                            <p>Scan products to start tracking expiry dates</p>
+                        </div>
+                    `;
                     return;
                 }
                 
@@ -1415,22 +1491,41 @@
                     const displayDate = formatDisplayDate(record.expiryDate);
                     
                     html += `
-                        <tr>
-                            <td>${record.barcode}</td>
-                            <td>${record.itemNo}</td>
-                            <td>${record.batch}</td>
-                            <td>${record.quantity}</td>
-                            <td>${displayDate}</td>
-                            <td><span class="expiry-badge ${statusClass}">${statusText}</span></td>
-                            <td class="action-cell">
-                                <button class="action-btn edit-btn" data-index="${index}">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="action-btn delete-btn" data-index="${index}">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                            </td>
-                        </tr>
+                        <div class="record-card">
+                            <div class="record-header">
+                                <div class="record-barcode">${record.barcode}</div>
+                                <div class="record-itemno">${record.itemNo}</div>
+                            </div>
+                            <div class="record-body">
+                                <div class="record-row">
+                                    <div class="record-label">Description:</div>
+                                    <div class="record-value">${record.description}</div>
+                                </div>
+                                <div class="record-row">
+                                    <div class="record-label">Batch:</div>
+                                    <div class="record-value">${record.batch}</div>
+                                </div>
+                                <div class="record-row">
+                                    <div class="record-label">Quantity:</div>
+                                    <div class="record-value">${record.quantity}</div>
+                                </div>
+                                <div class="record-row">
+                                    <div class="record-label">Expiry:</div>
+                                    <div class="record-value">${displayDate}</div>
+                                </div>
+                            </div>
+                            <div class="record-footer">
+                                <span class="expiry-badge ${statusClass}">${statusText}</span>
+                                <div class="record-actions">
+                                    <button class="action-btn edit-btn" data-index="${index}" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="action-btn delete-btn" data-index="${index}" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     `;
                 });
                 
@@ -1644,6 +1739,7 @@
             lastScanTime: 0,
             scanTimeout: null,
             formActive: false,
+            scanAttempts: 0,
 
             init() {
                 // Event listeners
@@ -1735,6 +1831,7 @@
                 
                 // Set continuous scanning flag
                 this.continuousScanning = true;
+                this.scanAttempts = 0;
                 
                 // Check for secure context (HTTPS or localhost)
                 if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
@@ -1753,8 +1850,9 @@
                     const stream = await navigator.mediaDevices.getUserMedia({
                         video: {
                             facingMode: "environment", // Prefer rear camera
-                            width: { min: 640, ideal: 1280 },
-                            height: { min: 480, ideal: 720 }
+                            width: { min: 1280, ideal: 1920 },
+                            height: { min: 720, ideal: 1080 },
+                            focusMode: "continuous"
                         },
                         audio: false
                     });
@@ -1786,6 +1884,9 @@
                     
                     storage.showNotification('Camera started. Scanning for barcodes...', 'success');
                     
+                    // Update debug info
+                    this.updateDebugInfo('Camera active. Point to barcode...');
+                    
                 } catch (error) {
                     console.error("Error starting camera:", error);
                     let message = "Camera initialization failed.";
@@ -1803,6 +1904,7 @@
                         message = "Camera access blocked for security reasons. Try serving over HTTPS.";
                     }
                     storage.showNotification(message, 'error');
+                    this.updateDebugInfo('Camera error: ' + message);
                 }
             },
             
@@ -1815,8 +1917,8 @@
                             target: document.querySelector('#camera-preview'),
                             constraints: {
                                 facingMode: "environment",
-                                width: 640,
-                                height: 480
+                                width: 1280,
+                                height: 720
                             }
                         },
                         decoder: {
@@ -1824,22 +1926,23 @@
                                 "code_128_reader",
                                 "ean_reader",
                                 "ean_8_reader",
+                                "upc_reader",
                                 "code_39_reader"
                             ],
                             debug: {
-                                drawBoundingBox: false,
+                                drawBoundingBox: true,
                                 showFrequency: false,
-                                drawScanline: false,
+                                drawScanline: true,
                                 showPattern: false
                             },
                             multiple: false
                         },
                         locate: true,
-                        numOfWorkers: 2,
-                        frequency: 10,
+                        numOfWorkers: 4,
+                        frequency: 30,
                         locator: {
                             halfSample: true,
-                            patchSize: "medium",
+                            patchSize: "large",
                         }
                     }, (err) => {
                         if (err) {
@@ -1851,9 +1954,23 @@
                         // Set up detection callback
                         Quagga.onDetected(this.onBarcodeDetected.bind(this));
                         
+                        // Add processed callback for debug info
+                        Quagga.onProcessed((result) => {
+                            if (result) {
+                                if (result.boxes) {
+                                    this.scanAttempts++;
+                                    this.updateDebugInfo(`Scanning... Attempts: ${this.scanAttempts}`);
+                                }
+                            }
+                        });
+                        
                         resolve();
                     });
                 });
+            },
+            
+            updateDebugInfo(message) {
+                document.getElementById('scanner-debug').textContent = message;
             },
             
             stopCamera(explicitStop = false) {
@@ -1884,6 +2001,7 @@
                         '<i class="fas fa-info-circle"></i> Camera not active.';
                     document.getElementById('camera-status').style.background = '';
                     document.getElementById('camera-status').style.color = '';
+                    this.updateDebugInfo('Camera stopped');
                     
                     // Only show notification if it's an explicit stop
                     if (explicitStop) {
@@ -1893,6 +2011,7 @@
                 } catch (error) {
                     console.error("Error stopping camera:", error);
                     storage.showNotification('Error stopping camera', 'error');
+                    this.updateDebugInfo('Error stopping camera');
                 }
             },
             
@@ -1916,6 +2035,7 @@
                 
                 // Give visual feedback
                 this.showScanFeedback(true);
+                this.updateDebugInfo('Barcode detected: ' + code);
                 
                 // Process the barcode after a short delay
                 setTimeout(() => {
@@ -1944,6 +2064,7 @@
                 }
                 
                 this.showScanFeedback(true);
+                this.updateDebugInfo('Manual input: ' + barcode);
                 setTimeout(() => {
                     this.processBarcode(barcode);
                 }, 500);
@@ -1955,6 +2076,7 @@
                 // Validate barcode format
                 if (!/^\d{8,14}$/.test(barcode)) {
                     storage.showNotification("Invalid barcode format. Must be 8-14 digits.", 'error');
+                    this.updateDebugInfo('Invalid barcode format');
                     return;
                 }
                 
