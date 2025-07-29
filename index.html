@@ -1988,10 +1988,7 @@
                 // Scroll to the form
                 document.getElementById('expiry-form').scrollIntoView({ behavior: 'smooth' });
                 
-                // Set min date to today for expiry date
-                const today = new Date();
-                const minDate = formatDate(today);
-                document.getElementById('expiry-date').min = minDate;
+                // REMOVED THE MIN DATE RESTRICTION TO ALLOW PAST DATES
             },
             
             showNewProductForm(barcode) {
