@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
     <style>
+        /* CSS remains unchanged from the original */
         :root {
             --primary-blue: #00387b;
             --alert-red: #bb1e10;
@@ -1812,15 +1813,16 @@
                                 facingMode: "environment",
                                 width: 640,
                                 height: 480
+                            },
+                            area: { // Define region of interest (center 50% of the frame)
+                                top: "25%",
+                                right: "25%",
+                                left: "25%",
+                                bottom: "25%"
                             }
                         },
                         decoder: {
-                            readers: [
-                                "code_128_reader",
-                                "ean_reader",
-                                "ean_8_reader",
-                                "code_39_reader"
-                            ],
+                            readers: ["ean_reader", "code_128_reader"], // Focus on common formats
                             debug: {
                                 drawBoundingBox: false,
                                 showFrequency: false,
@@ -1831,10 +1833,10 @@
                         },
                         locate: true,
                         numOfWorkers: 2,
-                        frequency: 10,
+                        frequency: 5, // Reduced frequency for better accuracy
                         locator: {
                             halfSample: true,
-                            patchSize: "medium",
+                            patchSize: "small" // More precise detection
                         }
                     }, (err) => {
                         if (err) {
@@ -1894,15 +1896,21 @@
             onBarcodeDetected(result) {
                 if (!this.isScanning || this.formActive) return;
                 
+                // Add confidence threshold (only accept if confidence >= 0.7)
+                if (result.codeResult.confidence < 0.7) {
+                    console.log("Low confidence barcode ignored:", result.codeResult.code);
+                    return;
+                }
+
                 const code = result.codeResult.code;
                 const now = Date.now();
                 
-                // Debounce: Ignore same code within 2 seconds
-                if (code === this.lastScannedCode && (now - this.lastScanTime) < 2000) {
+                // Debounce: Ignore same code within 3 seconds (changed from 2 to 3)
+                if (code === this.lastScannedCode && (now - this.lastScanTime) < 3000) {
                     return;
                 }
                 
-                console.log("Barcode detected:", code);
+                console.log("Barcode detected:", code, "Confidence:", result.codeResult.confidence);
                 this.lastScannedCode = code;
                 this.lastScanTime = now;
                 
@@ -1950,6 +1958,13 @@
                 // Validate barcode format
                 if (!/^\d{8,14}$/.test(barcode)) {
                     storage.showNotification("Invalid barcode format. Must be 8-14 digits.", 'error');
+                    
+                    // Restart scanning faster after invalid barcode (after 1 second)
+                    if (this.continuousScanning) {
+                        setTimeout(() => {
+                            this.startCamera();
+                        }, 1000);
+                    }
                     return;
                 }
                 
