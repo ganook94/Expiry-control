@@ -2073,23 +2073,13 @@
                 storage.currentProduct = null;
                 this.currentRecordIndex = null;
                 
-                // Restart scanning if continuous scanning was enabled
-                if (this.continuousScanning) {
-                    setTimeout(() => {
-                        this.startCamera();
-                    }, 500);
-                }
+                // Camera will NOT restart automatically after form is closed
             },
             
             hideNewProductForm() {
                 document.getElementById('new-product-form').style.display = 'none';
                 
-                // Restart scanning if continuous scanning was enabled
-                if (this.continuousScanning) {
-                    setTimeout(() => {
-                        this.startCamera();
-                    }, 500);
-                }
+                // Camera will NOT restart automatically after form is closed
             },
             
             validateBatchNumber(batch) {
